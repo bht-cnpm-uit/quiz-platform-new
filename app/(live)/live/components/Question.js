@@ -13,7 +13,6 @@ export default function Question({ questionIndex }) {
     const quiz = useSelector(quizSelector);
 
     const question = quiz.questions[questionIndex];
-    console.log(question);
     const dispatch = useDispatch();
 
     function handleSubmitQuestion() {

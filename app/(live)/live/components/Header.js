@@ -41,7 +41,7 @@ export default function Header() {
         dispatch(quizActions.reset());
     }
 
-    return (
+    return quiz ? (
         <>
             <div className="fixed right-0 left-0 z-[10] flex h-14 items-center justify-between border-b bg-gray-100 px-8">
                 <div className="flex items-center">
@@ -247,5 +247,7 @@ export default function Header() {
                 onOkButtonClick={() => dispatch(quizActions.complete())}
             />
         </>
+    ) : (
+        <></>
     );
 }

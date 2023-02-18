@@ -13,6 +13,7 @@
         "@next/font": "13.1.6",
         "@reduxjs/toolkit": "^1.9.1",
         "clsx": "^1.2.1",
+        "firebase": "^9.17.1",
         "framer-motion": "^8.4.3",
         "next": "13.1.6",
         "react": "18.2.0",

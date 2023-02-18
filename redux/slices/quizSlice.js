@@ -4,12 +4,16 @@ import QUIZ_STATE from '~/constants/quiz-state';
 import QUIZ from '~/data/quiz';
 import transformQuiz from '~/utils/transformQuiz';
 
-const initialState = transformQuiz(QUIZ);
+const initialState = null;
 
 export const quizSlice = createSlice({
     name: 'quiz',
     initialState,
     reducers: {
+        setQuiz: (state, action) => {
+            return action.payload ? transformQuiz(action.payload) : action.payload;
+        },
+
         chooseAnswer: (state, action) => {
             /**
              * {

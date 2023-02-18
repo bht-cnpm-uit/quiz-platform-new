@@ -1,14 +1,17 @@
 'use client';
+import { db } from '~/configs/firebase';
+import { collection, doc, getDoc } from 'firebase/firestore';
 
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { quizSelector } from '~/redux/selectors';
+import QUIZ_STATE from '~/constants/quiz-state';
+import { quizActions } from '~/redux/slices/quizSlice';
 import { toast } from 'react-toastify';
 import { useDebounce } from 'use-debounce';
-import QUIZ_STATE from '~/constants/quiz-state';
-import { quizSelector } from '~/redux/selectors';
 import Header from './components/Header';
 import Question from './components/Question';
 import Sidebar from './components/Sidebar';
@@ -31,19 +34,31 @@ const animItem = {
 };
 
 export default function Live() {
+    const quizRef = doc(db, 'quizzes', 'rwwsVRSBtu3Zayaib2mX');
+    const dispatch = useDispatch();
     const quiz = useSelector(quizSelector);
     const [questionIndex] = useDebounce(quiz?.currentQuestion, 200);
     const [showSidebar, setShowSidebar] = useState(true);
     const showCompletedQuiz = () => toast.success('Bạn đã hoàn thành tất cả câu hỏi!');
 
-    const isQuizComplete = useMemo(() => quiz.state !== QUIZ_STATE.PENDDING, [quiz.state]);
+    const isQuizComplete = useMemo(() => quiz?.state !== QUIZ_STATE.PENDDING, [quiz?.state]);
+
     useEffect(() => {
-        if (isQuizComplete && quiz.skippedQuestion === 0) {
+        getDoc(quizRef).then((docSnap) => {
+            if (docSnap.exists) {
+                dispatch(quizActions.setQuiz(docSnap.data()));
+            }
+            console.log(docSnap.data());
+        });
+    }, []);
+
+    useEffect(() => {
+        if (isQuizComplete && quiz?.skippedQuestion === 0) {
             showCompletedQuiz();
         }
     }, [isQuizComplete]);
 
-    return (
+    return quiz ? (
         <div className="w-full overflow-x-hidden">
             <Header />
             {quiz.state !== QUIZ_STATE.RESULT ? (
@@ -214,5 +229,7 @@ export default function Live() {
                 </AnimatePresence>
             )}
         </div>
+    ) : (
+        <div></div>
     );
 }
