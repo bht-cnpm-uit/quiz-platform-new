@@ -7,6 +7,13 @@ import Page from '../components/Page';
 async function getData(quizId) {
     const quizRef = doc(db, 'quizzes', quizId);
     const docSnap = await getDoc(quizRef);
+
+    await new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(1);
+        }, 2000);
+    });
+
     if (docSnap.exists) {
         return docSnap.data();
     }
