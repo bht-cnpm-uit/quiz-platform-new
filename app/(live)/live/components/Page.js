@@ -37,7 +37,6 @@ export default function Page({ quizRaw }) {
     const [questionIndex] = useDebounce(quiz?.currentQuestion, 200);
     const [showSidebar, setShowSidebar] = useState(true);
     const showCompletedQuiz = () => toast.success('Bạn đã hoàn thành tất cả câu hỏi!');
-
     const isQuizComplete = useMemo(() => quiz?.state !== QUIZ_STATE.PENDDING, [quiz?.state]);
 
     useEffect(() => {

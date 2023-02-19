@@ -99,7 +99,7 @@ export const quizSlice = createSlice({
         },
 
         reset: (state, action) => {
-            return initialState;
+            return state;
         },
     },
 });

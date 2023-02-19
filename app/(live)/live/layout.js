@@ -1,3 +1,10 @@
+import ClientToastContainer from './components/ClientToastContainer';
+
 export default function Layout({ children }) {
-    return <div>{children}</div>;
+    return (
+        <>
+            {children}
+            <ClientToastContainer autoClose={4000} />
+        </>
+    );
 }
