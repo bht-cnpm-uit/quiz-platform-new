@@ -1,20 +1,18 @@
 'use client';
-import { db } from '~/configs/firebase';
-import { collection, doc, getDoc } from 'firebase/firestore';
 
 import clsx from 'clsx';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
-import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
+import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import { useDispatch, useSelector } from 'react-redux';
-import { quizSelector } from '~/redux/selectors';
-import QUIZ_STATE from '~/constants/quiz-state';
-import { quizActions } from '~/redux/slices/quizSlice';
 import { toast } from 'react-toastify';
 import { useDebounce } from 'use-debounce';
-import Header from './components/Header';
-import Question from './components/Question';
-import Sidebar from './components/Sidebar';
+import QUIZ_STATE from '~/constants/quiz-state';
+import { quizSelector } from '~/redux/selectors';
+import { quizActions } from '~/redux/slices/quizSlice';
+import Header from './Header';
+import Question from './Question';
+import Sidebar from './Sidebar';
 
 // ANIM FOR RESULT
 const animGroup = {
@@ -33,10 +31,9 @@ const animItem = {
     show: { opacity: 1, y: 0 },
 };
 
-export default function Live() {
-    const quizRef = doc(db, 'quizzes', 'rwwsVRSBtu3Zayaib2mX');
-    const dispatch = useDispatch();
+export default function Page({ quizRaw }) {
     const quiz = useSelector(quizSelector);
+    const dispatch = useDispatch();
     const [questionIndex] = useDebounce(quiz?.currentQuestion, 200);
     const [showSidebar, setShowSidebar] = useState(true);
     const showCompletedQuiz = () => toast.success('Bạn đã hoàn thành tất cả câu hỏi!');
@@ -44,12 +41,7 @@ export default function Live() {
     const isQuizComplete = useMemo(() => quiz?.state !== QUIZ_STATE.PENDDING, [quiz?.state]);
 
     useEffect(() => {
-        getDoc(quizRef).then((docSnap) => {
-            if (docSnap.exists) {
-                dispatch(quizActions.setQuiz(docSnap.data()));
-            }
-            console.log(docSnap.data());
-        });
+        dispatch(quizActions.setQuiz(quizRaw));
     }, []);
 
     useEffect(() => {
@@ -151,7 +143,7 @@ export default function Live() {
                                         </div>
                                     </CircularProgressbarWithChildren>
                                 </div>
-                                <div className="font-semibold uppercase text-gray-600">số câu đúng</div>
+                                <div className="font-semibold uppercase text-gray-600">Số câu đúng</div>
                                 <div className="text-7xl font-bold">{quiz.correctQuestion}</div>
                             </motion.div>
                             <motion.div
@@ -175,7 +167,7 @@ export default function Live() {
                                         </div>
                                     </CircularProgressbarWithChildren>
                                 </div>
-                                <div className="font-semibold uppercase text-gray-600">số câu sai</div>
+                                <div className="font-semibold uppercase text-gray-600">Số câu sai</div>
                                 <div className="text-7xl font-bold">{quiz.incorrectQuestion}</div>
                             </motion.div>
                             <motion.div
@@ -199,7 +191,7 @@ export default function Live() {
                                         </div>
                                     </CircularProgressbarWithChildren>
                                 </div>
-                                <div className="font-semibold uppercase text-gray-600">số câu bỏ qua</div>
+                                <div className="font-semibold uppercase text-gray-600">Số câu bỏ qua</div>
                                 <div className="text-7xl font-bold">{quiz.skippedQuestion}</div>
                             </motion.div>
                             <motion.div
@@ -221,7 +213,7 @@ export default function Live() {
                                         <div className="text-lg">{100 + '%'}</div>
                                     </CircularProgressbarWithChildren>
                                 </div>
-                                <div className="font-semibold uppercase text-gray-600">tổng số câu</div>
+                                <div className="font-semibold uppercase text-gray-600">Tổng số câu</div>
                                 <div className="text-7xl font-bold">{quiz.numberOfQuestion}</div>
                             </motion.div>
                         </motion.div>
