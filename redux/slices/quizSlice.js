@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import QUESTION_STATE from '~/constants/question-state';
 import QUIZ_STATE from '~/constants/quiz-state';
 import QUIZ from '~/data/quiz';
+import resetQuiz from '~/utils/resetQuiz';
 import transformQuiz from '~/utils/transformQuiz';
 
 const initialState = null;
@@ -99,7 +100,7 @@ export const quizSlice = createSlice({
         },
 
         reset: (state, action) => {
-            return state;
+            return resetQuiz(state);
         },
     },
 });

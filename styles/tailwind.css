@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+    :root {
+        --h-header: 60px;
+    }
     button,
     input {
         @apply outline-none;

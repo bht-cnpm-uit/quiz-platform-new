@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
-import { CircularProgressbarWithChildren } from 'react-circular-progressbar';
+import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useDebounce } from 'use-debounce';
