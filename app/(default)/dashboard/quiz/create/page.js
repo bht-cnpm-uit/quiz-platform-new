@@ -3,6 +3,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { db } from '~/configs/firebase';
 import QUIZ from '~/data/quiz';
+import ContentEditor from '../components/ContentEditor';
 import QuestionCard from '../components/QuestionCard';
 
 export default function CreateQuiz() {
@@ -61,6 +62,7 @@ export default function CreateQuiz() {
                 <button onClick={handleAddQuestion}>Tạo câu hỏi</button>
             </div>
             <div className="w-60 shadow-test">
+                <ContentEditor />
                 <button onClick={handleCreateQuiz}>Tao QUIZ</button>
             </div>
         </div>
