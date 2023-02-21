@@ -60,7 +60,6 @@
     }
 
     .link-editor .link-input {
-        display: block;
         width: calc(100% - 24px);
         box-sizing: border-box;
         margin: 8px 12px;
@@ -73,34 +72,6 @@
         outline: 0;
         position: relative;
         font-family: inherit;
-    }
-
-    .link-editor div.link-edit {
-        background-color: aqua;
-        background-size: 16px;
-        background-position: center;
-        background-repeat: no-repeat;
-        width: 35px;
-        vertical-align: -0.25em;
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        cursor: pointer;
-    }
-
-    .link-editor .link-input a {
-        color: rgb(33, 111, 219);
-        text-decoration: none;
-        display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        margin-right: 30px;
-        text-overflow: ellipsis;
-    }
-
-    .link-editor .link-input a:hover {
-        text-decoration: underline;
     }
 
     .link-editor .button {
