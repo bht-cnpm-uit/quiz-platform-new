@@ -504,32 +504,38 @@ export default function ToolbarPlugin() {
     }, [editor, isLink]);
 
     return (
-        <div className="flex p-3 text-gray-600" ref={toolbarRef}>
+        <div className="flex p-1 text-gray-600" ref={toolbarRef}>
             <button
                 disabled={!canUndo}
                 onClick={() => {
                     editor.dispatchCommand(UNDO_COMMAND);
                 }}
-                className="toolbar-item spaced"
+                className="rounded-lg px-2 py-1.5 hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50"
                 aria-label="Undo"
             >
-                <i className="format undo" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
+                    <path fillRule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
+                    <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
+                </svg>
             </button>
             <button
                 disabled={!canRedo}
                 onClick={() => {
                     editor.dispatchCommand(REDO_COMMAND);
                 }}
-                className="toolbar-item"
+                className="rounded-lg px-2 py-1.5 hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50"
                 aria-label="Redo"
             >
-                <i className="format redo" />
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
+                    <path fillRule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
+                    <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+                </svg>
             </button>
             <Divider />
             {supportedBlockTypes.has(blockType) && (
                 <>
                     <button
-                        className="toolbar-item block-controls"
+                        className="block-controls rounded-lg px-2 py-1.5 hover:bg-gray-100"
                         onClick={() => setShowBlockOptionsDropDown(!showBlockOptionsDropDown)}
                         aria-label="Formatting Options"
                     >
@@ -553,7 +559,7 @@ export default function ToolbarPlugin() {
             {blockType === 'code' ? (
                 <>
                     <Select
-                        className="toolbar-item code-language"
+                        className="code-language rounded-lg px-2 py-1.5 hover:bg-gray-100"
                         onChange={onCodeLanguageSelect}
                         options={codeLanguges}
                         value={codeLanguage}
@@ -566,7 +572,7 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
                         }}
-                        className={'toolbar-item spaced ' + (isBold ? 'active' : '')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isBold ? 'active' : '')}
                         aria-label="Format Bold"
                     >
                         <svg
@@ -582,7 +588,7 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
                         }}
-                        className={'toolbar-item spaced ' + (isItalic ? 'active' : '')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isItalic ? 'active' : '')}
                         aria-label="Format Italics"
                     >
                         <svg
@@ -598,7 +604,7 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
                         }}
-                        className={'toolbar-item spaced ' + (isUnderline ? 'active' : '')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isUnderline ? 'active' : '')}
                         aria-label="Format Underline"
                     >
                         <svg
@@ -614,7 +620,7 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
                         }}
-                        className={'toolbar-item spaced ' + (isStrikethrough ? 'active' : '')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isStrikethrough ? 'active' : '')}
                         aria-label="Format Strikethrough"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
@@ -625,7 +631,7 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
                         }}
-                        className={'toolbar-item spaced ' + (isCode ? 'active' : '')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isCode ? 'active' : '')}
                         aria-label="Insert Code"
                     >
                         <svg
@@ -639,7 +645,7 @@ export default function ToolbarPlugin() {
                     </button>
                     <button
                         onClick={insertLink}
-                        className={'toolbar-item spaced ' + (isLink ? 'active' : '')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isLink ? 'active' : '')}
                         aria-label="Insert Link"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
@@ -653,12 +659,12 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
                         }}
-                        className="toolbar-item spaced"
+                        className=" rounded-lg px-2 py-1.5 hover:bg-gray-100"
                         aria-label="Left Align"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
                             <path
-                                fill-rule="evenodd"
+                                fillRule="evenodd"
                                 d="M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
                             />
                         </svg>
@@ -667,12 +673,12 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
                         }}
-                        className="toolbar-item spaced"
+                        className=" rounded-lg px-2 py-1.5 hover:bg-gray-100"
                         aria-label="Center Align"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
                             <path
-                                fill-rule="evenodd"
+                                fillRule="evenodd"
                                 d="M4 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
                             />
                         </svg>
@@ -681,12 +687,12 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
                         }}
-                        className="toolbar-item spaced"
+                        className=" rounded-lg px-2 py-1.5 hover:bg-gray-100"
                         aria-label="Right Align"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
                             <path
-                                fill-rule="evenodd"
+                                fillRule="evenodd"
                                 d="M6 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
                             />
                         </svg>
@@ -695,12 +701,12 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify');
                         }}
-                        className="toolbar-item"
+                        className="rounded-lg px-2 py-1.5 hover:bg-gray-100"
                         aria-label="Justify Align"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
                             <path
-                                fill-rule="evenodd"
+                                fillRule="evenodd"
                                 d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
                             />
                         </svg>
