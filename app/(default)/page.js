@@ -1,3 +1,9 @@
+import Editor from './components/Editor';
+
 export default function Home() {
-    return <h1>HOME</h1>;
+    return (
+        <div className="mx-auto max-w-[720px] bg-white">
+            <Editor />
+        </div>
+    );
 }

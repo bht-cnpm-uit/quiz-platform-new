@@ -11,3 +11,130 @@
         @apply outline-none;
     }
 }
+
+@layer components {
+    .editor-placeholder {
+        @apply pointer-events-none absolute top-2 left-3 inline-block select-none overflow-hidden text-ellipsis text-gray-600;
+    }
+
+    .editor-text-bold {
+        @apply font-semibold;
+    }
+    .editor-text-italic {
+        @apply italic;
+    }
+    .editor-text-underline {
+        @apply underline;
+    }
+    .editor-text-strikethrough {
+        @apply line-through;
+    }
+    .editor-text-code {
+        @apply rounded-sm bg-gray-200 py-[1px] px-[3px] font-mono font-thin;
+    }
+
+    .editor-link {
+        @apply text-primary;
+    }
+
+    .link-editor {
+        position: absolute;
+        z-index: 100;
+        top: -10000px;
+        left: -10000px;
+        margin-top: -6px;
+        max-width: 300px;
+        width: 100%;
+        opacity: 0;
+        background-color: #fff;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+        border-radius: 8px;
+        transition: opacity 0.5s;
+    }
+
+    .link-editor .link-input {
+        display: block;
+        width: calc(100% - 24px);
+        box-sizing: border-box;
+        margin: 8px 12px;
+        padding: 8px 12px;
+        border-radius: 15px;
+        background-color: #eee;
+        font-size: 15px;
+        color: rgb(5, 5, 5);
+        border: 0;
+        outline: 0;
+        position: relative;
+        font-family: inherit;
+    }
+
+    .link-editor div.link-edit {
+        background-color: aqua;
+        background-size: 16px;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 35px;
+        vertical-align: -0.25em;
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        cursor: pointer;
+    }
+
+    .link-editor .link-input a {
+        color: rgb(33, 111, 219);
+        text-decoration: none;
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        margin-right: 30px;
+        text-overflow: ellipsis;
+    }
+
+    .link-editor .link-input a:hover {
+        text-decoration: underline;
+    }
+
+    .link-editor .button {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        padding: 6px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 0 2px;
+    }
+
+    .link-editor .button.hovered {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        background-color: #eee;
+    }
+
+    .link-editor .button i,
+    .actions i {
+        background-size: contain;
+        display: inline-block;
+        height: 20px;
+        width: 20px;
+        vertical-align: -0.25em;
+    }
+
+    .tree-view-output {
+        @apply relative block max-h-[250px] overflow-auto whitespace-pre-wrap bg-gray-800 p-1 text-xs leading-4 text-white;
+    }
+    .debug-timetravel-panel {
+        @apply m-auto flex overflow-hidden pb-3;
+    }
+    .debug-timetravel-button {
+        @apply absolute top-3 right-4 hover:underline;
+    }
+    .debug-timetravel-panel-slider {
+        @apply flex-[8];
+    }
+    .debug-timetravel-panel-button {
+        @apply flex-1 hover:underline;
+    }
+}
