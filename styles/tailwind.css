@@ -13,6 +13,13 @@
 }
 
 @layer components {
+    .editor-input ul li {
+        @apply ml-6 list-disc;
+    }
+    .editor-input ol li {
+        @apply ml-6 list-decimal;
+    }
+
     .editor-placeholder {
         @apply pointer-events-none absolute top-2 left-3 inline-block select-none overflow-hidden text-ellipsis text-gray-600;
     }

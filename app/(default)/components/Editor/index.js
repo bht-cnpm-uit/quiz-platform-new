@@ -58,7 +58,7 @@ export default function Editor() {
                 <div className="relative">
                     <RichTextPlugin
                         contentEditable={
-                            <ContentEditable className="min-h-[150px] border py-2 px-3 focus:outline-none " />
+                            <ContentEditable className="editor-input min-h-[150px] border py-2 px-3 focus:outline-none" />
                         }
                         placeholder={<Placeholder />}
                         ErrorBoundary={LexicalErrorBoundary}
