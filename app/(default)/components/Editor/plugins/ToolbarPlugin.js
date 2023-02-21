@@ -47,7 +47,7 @@ const blockTypeToBlockName = {
 };
 
 function Divider() {
-    return <div className="divider" />;
+    return <div className="mx-1 h-8 border-l"></div>;
 }
 
 function positionEditorElement(editor, rect) {
@@ -524,7 +524,7 @@ export default function ToolbarPlugin() {
     }, [editor, isLink]);
 
     return (
-        <div className="flex p-1 text-gray-600" ref={toolbarRef}>
+        <div className="flex items-center p-1 text-gray-600" ref={toolbarRef}>
             <button
                 disabled={!canUndo}
                 onClick={() => {
@@ -533,7 +533,7 @@ export default function ToolbarPlugin() {
                 className="rounded-lg px-2 py-1.5 hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50"
                 aria-label="Undo"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
                     <path fillRule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
                     <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
                 </svg>
@@ -546,7 +546,7 @@ export default function ToolbarPlugin() {
                 className="rounded-lg px-2 py-1.5 hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50"
                 aria-label="Redo"
             >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="h-5 w-5" viewBox="0 0 16 16">
                     <path fillRule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
                     <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
                 </svg>
@@ -643,7 +643,12 @@ export default function ToolbarPlugin() {
                         className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isStrikethrough ? 'active' : '')}
                         aria-label="Format Strikethrough"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            className="h-5 w-5"
+                            viewBox="0 0 16 16"
+                        >
                             <path d="M6.333 5.686c0 .31.083.581.27.814H5.166a2.776 2.776 0 0 1-.099-.76c0-1.627 1.436-2.768 3.48-2.768 1.969 0 3.39 1.175 3.445 2.85h-1.23c-.11-1.08-.964-1.743-2.25-1.743-1.23 0-2.18.602-2.18 1.607zm2.194 7.478c-2.153 0-3.589-1.107-3.705-2.81h1.23c.144 1.06 1.129 1.703 2.544 1.703 1.34 0 2.31-.705 2.31-1.675 0-.827-.547-1.374-1.914-1.675L8.046 8.5H1v-1h14v1h-3.504c.468.437.675.994.675 1.697 0 1.826-1.436 2.967-3.644 2.967z" />
                         </svg>
                     </button>
@@ -668,7 +673,12 @@ export default function ToolbarPlugin() {
                         className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isLink ? 'active' : '')}
                         aria-label="Insert Link"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            className="h-5 w-5"
+                            viewBox="0 0 16 16"
+                        >
                             <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
                             <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z" />
                         </svg>
@@ -682,7 +692,12 @@ export default function ToolbarPlugin() {
                         className=" rounded-lg px-2 py-1.5 hover:bg-gray-100"
                         aria-label="Left Align"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            className="h-5 w-5"
+                            viewBox="0 0 16 16"
+                        >
                             <path
                                 fillRule="evenodd"
                                 d="M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
@@ -696,7 +711,12 @@ export default function ToolbarPlugin() {
                         className=" rounded-lg px-2 py-1.5 hover:bg-gray-100"
                         aria-label="Center Align"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            className="h-5 w-5"
+                            viewBox="0 0 16 16"
+                        >
                             <path
                                 fillRule="evenodd"
                                 d="M4 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
@@ -710,7 +730,12 @@ export default function ToolbarPlugin() {
                         className=" rounded-lg px-2 py-1.5 hover:bg-gray-100"
                         aria-label="Right Align"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            className="h-5 w-5"
+                            viewBox="0 0 16 16"
+                        >
                             <path
                                 fillRule="evenodd"
                                 d="M6 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
@@ -724,7 +749,12 @@ export default function ToolbarPlugin() {
                         className="rounded-lg px-2 py-1.5 hover:bg-gray-100"
                         aria-label="Justify Align"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="h-5 w-5" viewBox="0 0 16 16">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            className="h-5 w-5"
+                            viewBox="0 0 16 16"
+                        >
                             <path
                                 fillRule="evenodd"
                                 d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
