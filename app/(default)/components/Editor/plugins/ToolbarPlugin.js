@@ -19,6 +19,7 @@ import { $getNearestNodeOfType, mergeRegister } from '@lexical/utils';
 import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, $isListNode, ListNode } from '@lexical/list';
 import { $createCodeNode, $isCodeNode, getDefaultCodeLanguage, getCodeLanguages } from '@lexical/code';
 import { INSERT_IMAGE_COMMAND } from './ImagePlugin';
+import { INSERT_POLL_COMMAND } from './PollPlugin';
 
 const LowPriority = 1;
 
@@ -360,6 +361,42 @@ export default function ToolbarPlugin() {
                     <Divider />
                     <button
                         onClick={() => editor.dispatchCommand(INSERT_IMAGE_COMMAND, 'https://picsum.photos/200')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
+                        aria-label="Format Bold"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="h-5 w-5"
+                        >
+                            <path
+                                fillRule="evenodd"
+                                d="M6.28 5.22a.75.75 0 010 1.06L2.56 10l3.72 3.72a.75.75 0 01-1.06 1.06L.97 10.53a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0zm7.44 0a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L17.44 10l-3.72-3.72a.75.75 0 010-1.06zM11.377 2.011a.75.75 0 01.612.867l-2.5 14.5a.75.75 0 01-1.478-.255l2.5-14.5a.75.75 0 01.866-.612z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                    </button>
+                    <button
+                        onClick={() => editor.dispatchCommand(INSERT_POLL_COMMAND, 'Poll random')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
+                        aria-label="Format Bold"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="h-5 w-5"
+                        >
+                            <path
+                                fillRule="evenodd"
+                                d="M6.28 5.22a.75.75 0 010 1.06L2.56 10l3.72 3.72a.75.75 0 01-1.06 1.06L.97 10.53a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0zm7.44 0a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L17.44 10l-3.72-3.72a.75.75 0 010-1.06zM11.377 2.011a.75.75 0 01.612.867l-2.5 14.5a.75.75 0 01-1.478-.255l2.5-14.5a.75.75 0 01.866-.612z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                    </button>
+                    <button
+                        onClick={() => editor.setEditable(!editor.isEditable())}
                         className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
                         aria-label="Format Bold"
                     >

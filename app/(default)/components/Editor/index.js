@@ -21,6 +21,8 @@ import { TRANSFORMERS } from '@lexical/markdown';
 import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
 import ImagesPlugin from './plugins/ImagePlugin';
 import { ImageNode } from './nodes/ImageNode';
+import PollPlugin from './plugins/PollPlugin';
+import { PollNode } from './nodes/PollNode';
 
 function Placeholder() {
     return <div className="editor-placeholder">Enter some rich text...</div>;
@@ -34,7 +36,7 @@ const editorConfig = {
         throw error;
     },
     // Any custom nodes go here
-    nodes: [ListNode, ListItemNode, CodeNode, CodeHighlightNode, ImageNode],
+    nodes: [ListNode, ListItemNode, CodeNode, CodeHighlightNode, ImageNode, PollNode],
 };
 
 export default function Editor() {
@@ -56,6 +58,7 @@ export default function Editor() {
                     <CodeHighlightPlugin />
                     <ListPlugin />
                     <ImagesPlugin />
+                    <PollPlugin />
                     {/* <MarkdownShortcutPlugin transformers={TRANSFORMERS} /> */}
                 </div>
             </div>
