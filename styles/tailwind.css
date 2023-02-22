@@ -37,67 +37,55 @@
         @apply line-through;
     }
     .editor-text-code {
-        @apply rounded-sm bg-gray-200 py-[1px] px-[3px] font-mono font-thin;
+        @apply rounded-sm bg-gray-200 py-[1px] px-[3px] text-sm;
+        font-family: Menlo, Consolas, Monaco, monospace;
     }
 
-    .editor-link {
-        @apply text-primary;
+    .editor-code {
+        font-family: Menlo, Consolas, Monaco, monospace;
+        @apply relative my-2 block max-h-[500px] overflow-x-auto whitespace-pre bg-gray-50 py-2 pr-8 pl-12 text-sm;
+        tab-size: 2;
     }
 
-    .link-editor {
-        position: absolute;
-        z-index: 100;
-        top: -10000px;
-        left: -10000px;
-        margin-top: -6px;
-        max-width: 300px;
-        width: 100%;
-        opacity: 0;
-        background-color: #fff;
-        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
-        border-radius: 8px;
-        transition: opacity 0.5s;
+    .editor-code:before {
+        content: attr(data-gutter);
+        @apply absolute left-0 top-0 min-w-[24px] whitespace-pre-wrap border-r bg-gray-100 p-2 text-right text-gray-600;
+    }
+    .editor-code:after {
+        content: attr(data-highlight-language);
+        @apply absolute top-0 right-1 p-1 text-xs uppercase text-gray-900;
     }
 
-    .link-editor .link-input {
-        width: calc(100% - 24px);
-        box-sizing: border-box;
-        margin: 8px 12px;
-        padding: 8px 12px;
-        border-radius: 15px;
-        background-color: #eee;
-        font-size: 15px;
-        color: rgb(5, 5, 5);
-        border: 0;
-        outline: 0;
-        position: relative;
-        font-family: inherit;
+    .editor-tokenComment {
+        color: slategray;
     }
 
-    .link-editor .button {
-        width: 20px;
-        height: 20px;
-        display: inline-block;
-        padding: 6px;
-        border-radius: 8px;
-        cursor: pointer;
-        margin: 0 2px;
+    .editor-tokenPunctuation {
+        color: #999;
     }
 
-    .link-editor .button.hovered {
-        width: 20px;
-        height: 20px;
-        display: inline-block;
-        background-color: #eee;
+    .editor-tokenProperty {
+        color: #905;
     }
 
-    .link-editor .button i,
-    .actions i {
-        background-size: contain;
-        display: inline-block;
-        height: 20px;
-        width: 20px;
-        vertical-align: -0.25em;
+    .editor-tokenSelector {
+        color: #690;
+    }
+
+    .editor-tokenOperator {
+        color: #9a6e3a;
+    }
+
+    .editor-tokenAttr {
+        color: #07a;
+    }
+
+    .editor-tokenVariable {
+        color: #e90;
+    }
+
+    .editor-tokenFunction {
+        color: #dd4a68;
     }
 
     .tree-view-output {

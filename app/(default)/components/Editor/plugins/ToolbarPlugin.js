@@ -9,14 +9,12 @@ import {
     UNDO_COMMAND,
     SELECTION_CHANGE_COMMAND,
     FORMAT_TEXT_COMMAND,
-    FORMAT_ELEMENT_COMMAND,
     $getSelection,
     $isRangeSelection,
     $createParagraphNode,
     $getNodeByKey,
 } from 'lexical';
-import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
-import { $isParentElementRTL, $wrapNodes, $isAtNodeEnd } from '@lexical/selection';
+import { $wrapNodes } from '@lexical/selection';
 import { $getNearestNodeOfType, mergeRegister } from '@lexical/utils';
 import {
     INSERT_ORDERED_LIST_COMMAND,
@@ -25,201 +23,12 @@ import {
     $isListNode,
     ListNode,
 } from '@lexical/list';
-import { createPortal } from 'react-dom';
-import { $createHeadingNode, $createQuoteNode, $isHeadingNode } from '@lexical/rich-text';
 import { $createCodeNode, $isCodeNode, getDefaultCodeLanguage, getCodeLanguages } from '@lexical/code';
 
 const LowPriority = 1;
 
-const supportedBlockTypes = new Set(['paragraph', 'quote', 'code', 'h1', 'h2', 'ul', 'ol']);
-
-const blockTypeToBlockName = {
-    code: 'Code Block',
-    h1: 'Large Heading',
-    h2: 'Small Heading',
-    h3: 'Heading',
-    h4: 'Heading',
-    h5: 'Heading',
-    ol: 'Numbered List',
-    paragraph: 'Normal',
-    quote: 'Quote',
-    ul: 'Bulleted List',
-};
-
 function Divider() {
     return <div className="mx-1 h-8 border-l"></div>;
-}
-
-function positionEditorElement(editor, rect) {
-    if (rect === null) {
-        editor.style.opacity = '0';
-        editor.style.top = '-1000px';
-        editor.style.left = '-1000px';
-    } else {
-        editor.style.opacity = '1';
-        editor.style.top = `${rect.top + rect.height + window.pageYOffset + 10}px`;
-        editor.style.left = `${rect.left + window.pageXOffset - editor.offsetWidth / 2 + rect.width / 2}px`;
-    }
-}
-
-function FloatingLinkEditor({ editor }) {
-    const editorRef = useRef(null);
-    const inputRef = useRef(null);
-    const mouseDownRef = useRef(false);
-    const [linkUrl, setLinkUrl] = useState('');
-    const [isEditMode, setEditMode] = useState(false);
-    const [lastSelection, setLastSelection] = useState(null);
-
-    const updateLinkEditor = useCallback(() => {
-        const selection = $getSelection();
-        if ($isRangeSelection(selection)) {
-            const node = getSelectedNode(selection);
-            const parent = node.getParent();
-            if ($isLinkNode(parent)) {
-                setLinkUrl(parent.getURL());
-            } else if ($isLinkNode(node)) {
-                setLinkUrl(node.getURL());
-            } else {
-                setLinkUrl('');
-            }
-        }
-        const editorElem = editorRef.current;
-        const nativeSelection = window.getSelection();
-        const activeElement = document.activeElement;
-
-        if (editorElem === null) {
-            return;
-        }
-
-        const rootElement = editor.getRootElement();
-        if (
-            selection !== null &&
-            !nativeSelection.isCollapsed &&
-            rootElement !== null &&
-            rootElement.contains(nativeSelection.anchorNode)
-        ) {
-            const domRange = nativeSelection.getRangeAt(0);
-            let rect;
-            if (nativeSelection.anchorNode === rootElement) {
-                let inner = rootElement;
-                while (inner.firstElementChild != null) {
-                    inner = inner.firstElementChild;
-                }
-                rect = inner.getBoundingClientRect();
-            } else {
-                rect = domRange.getBoundingClientRect();
-            }
-
-            if (!mouseDownRef.current) {
-                positionEditorElement(editorElem, rect);
-            }
-            setLastSelection(selection);
-        } else if (!activeElement || activeElement.className !== 'link-input') {
-            positionEditorElement(editorElem, null);
-            setLastSelection(null);
-            setEditMode(false);
-            setLinkUrl('');
-        }
-
-        return true;
-    }, [editor]);
-
-    useEffect(() => {
-        return mergeRegister(
-            editor.registerUpdateListener(({ editorState }) => {
-                editorState.read(() => {
-                    updateLinkEditor();
-                });
-            }),
-
-            editor.registerCommand(
-                SELECTION_CHANGE_COMMAND,
-                () => {
-                    updateLinkEditor();
-                    return true;
-                },
-                LowPriority
-            )
-        );
-    }, [editor, updateLinkEditor]);
-
-    useEffect(() => {
-        editor.getEditorState().read(() => {
-            updateLinkEditor();
-        });
-    }, [editor, updateLinkEditor]);
-
-    useEffect(() => {
-        if (isEditMode && inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, [isEditMode]);
-
-    return (
-        <div ref={editorRef} className="link-editor">
-            {isEditMode ? (
-                <input
-                    ref={inputRef}
-                    className="link-input"
-                    value={linkUrl}
-                    onChange={(event) => {
-                        setLinkUrl(event.target.value);
-                    }}
-                    onKeyDown={(event) => {
-                        if (event.key === 'Enter') {
-                            event.preventDefault();
-                            if (lastSelection !== null) {
-                                if (linkUrl !== '') {
-                                    editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkUrl);
-                                }
-                                setEditMode(false);
-                            }
-                        } else if (event.key === 'Escape') {
-                            event.preventDefault();
-                            setEditMode(false);
-                        }
-                    }}
-                />
-            ) : (
-                <>
-                    <div className="link-input flex">
-                        <a
-                            className="block flex-1 text-ellipsis text-primary hover:underline"
-                            href={linkUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            {linkUrl}
-                        </a>
-                        <div
-                            className="inline-flex cursor-pointer items-center px-1 hover:text-primary"
-                            role="button"
-                            tabIndex={0}
-                            onMouseDown={(event) => event.preventDefault()}
-                            onClick={() => {
-                                setEditMode(true);
-                            }}
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="h-4 w-4"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
-                                />
-                            </svg>
-                        </div>
-                    </div>
-                </>
-            )}
-        </div>
-    );
 }
 
 function Select({ onChange, className, options, value }) {
@@ -235,58 +44,25 @@ function Select({ onChange, className, options, value }) {
     );
 }
 
-function getSelectedNode(selection) {
-    const anchor = selection.anchor;
-    const focus = selection.focus;
-    const anchorNode = selection.anchor.getNode();
-    const focusNode = selection.focus.getNode();
-    if (anchorNode === focusNode) {
-        return anchorNode;
-    }
-    const isBackward = selection.isBackward();
-    if (isBackward) {
-        return $isAtNodeEnd(focus) ? anchorNode : focusNode;
-    } else {
-        return $isAtNodeEnd(anchor) ? focusNode : anchorNode;
-    }
-}
+export default function ToolbarPlugin() {
+    const [editor] = useLexicalComposerContext();
+    const toolbarRef = useRef(null);
+    const [canUndo, setCanUndo] = useState(false);
+    const [canRedo, setCanRedo] = useState(false);
 
-function BlockOptionsDropdownList({ editor, blockType, toolbarRef, setShowBlockOptionsDropDown }) {
-    const dropDownRef = useRef(null);
+    const [blockType, setBlockType] = useState('paragraph');
+    const [selectedElementKey, setSelectedElementKey] = useState(null);
+    const [codeLanguage, setCodeLanguage] = useState('');
+    const [format, setFormat] = useState({
+        bold: false,
+        italic: false,
+        underline: false,
+        strikethrough: false,
+        code: false,
+    });
 
-    useEffect(() => {
-        const toolbar = toolbarRef.current;
-        const dropDown = dropDownRef.current;
-
-        if (toolbar !== null && dropDown !== null) {
-            const { top, left } = toolbar.getBoundingClientRect();
-            dropDown.style.top = `${top + 40}px`;
-            dropDown.style.left = `${left}px`;
-        }
-    }, [dropDownRef, toolbarRef]);
-
-    useEffect(() => {
-        const dropDown = dropDownRef.current;
-        const toolbar = toolbarRef.current;
-
-        if (dropDown !== null && toolbar !== null) {
-            const handle = (event) => {
-                const target = event.target;
-
-                if (!dropDown.contains(target) && !toolbar.contains(target)) {
-                    setShowBlockOptionsDropDown(false);
-                }
-            };
-            document.addEventListener('click', handle);
-
-            return () => {
-                document.removeEventListener('click', handle);
-            };
-        }
-    }, [dropDownRef, setShowBlockOptionsDropDown, toolbarRef]);
-
-    const formatParagraph = () => {
-        if (blockType !== 'paragraph') {
+    function toggleBlockType(type) {
+        if (blockType === type) {
             editor.update(() => {
                 const selection = $getSelection();
 
@@ -294,138 +70,31 @@ function BlockOptionsDropdownList({ editor, blockType, toolbarRef, setShowBlockO
                     $wrapNodes(selection, () => $createParagraphNode());
                 }
             });
+            return;
         }
-        setShowBlockOptionsDropDown(false);
-    };
 
-    const formatLargeHeading = () => {
-        if (blockType !== 'h1') {
-            editor.update(() => {
-                const selection = $getSelection();
+        switch (type) {
+            case 'ul': {
+                editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND);
+                break;
+            }
+            case 'ol': {
+                editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND);
+                break;
+            }
+            case 'code': {
+                editor.update(() => {
+                    const selection = $getSelection();
 
-                if ($isRangeSelection(selection)) {
-                    $wrapNodes(selection, () => $createHeadingNode('h1'));
-                }
-            });
+                    if ($isRangeSelection(selection)) {
+                        $wrapNodes(selection, () => $createCodeNode());
+                    }
+                });
+            }
         }
-        setShowBlockOptionsDropDown(false);
-    };
+    }
 
-    const formatSmallHeading = () => {
-        if (blockType !== 'h2') {
-            editor.update(() => {
-                const selection = $getSelection();
-
-                if ($isRangeSelection(selection)) {
-                    $wrapNodes(selection, () => $createHeadingNode('h2'));
-                }
-            });
-        }
-        setShowBlockOptionsDropDown(false);
-    };
-
-    const formatBulletList = () => {
-        if (blockType !== 'ul') {
-            editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND);
-        } else {
-            editor.dispatchCommand(REMOVE_LIST_COMMAND);
-        }
-        setShowBlockOptionsDropDown(false);
-    };
-
-    const formatNumberedList = () => {
-        if (blockType !== 'ol') {
-            editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND);
-        } else {
-            editor.dispatchCommand(REMOVE_LIST_COMMAND);
-        }
-        setShowBlockOptionsDropDown(false);
-    };
-
-    const formatQuote = () => {
-        if (blockType !== 'quote') {
-            editor.update(() => {
-                const selection = $getSelection();
-
-                if ($isRangeSelection(selection)) {
-                    $wrapNodes(selection, () => $createQuoteNode());
-                }
-            });
-        }
-        setShowBlockOptionsDropDown(false);
-    };
-
-    const formatCode = () => {
-        if (blockType !== 'code') {
-            editor.update(() => {
-                const selection = $getSelection();
-
-                if ($isRangeSelection(selection)) {
-                    $wrapNodes(selection, () => $createCodeNode());
-                }
-            });
-        }
-        setShowBlockOptionsDropDown(false);
-    };
-
-    return (
-        <div className="dropdown" ref={dropDownRef}>
-            <button className="item" onClick={formatParagraph}>
-                <span className="icon paragraph" />
-                <span className="text">Normal</span>
-                {blockType === 'paragraph' && <span className="active" />}
-            </button>
-            <button className="item" onClick={formatLargeHeading}>
-                <span className="icon large-heading" />
-                <span className="text">Large Heading</span>
-                {blockType === 'h1' && <span className="active" />}
-            </button>
-            <button className="item" onClick={formatSmallHeading}>
-                <span className="icon small-heading" />
-                <span className="text">Small Heading</span>
-                {blockType === 'h2' && <span className="active" />}
-            </button>
-            <button className="item" onClick={formatBulletList}>
-                <span className="icon bullet-list" />
-                <span className="text">Bullet List</span>
-                {blockType === 'ul' && <span className="active" />}
-            </button>
-            <button className="item" onClick={formatNumberedList}>
-                <span className="icon numbered-list" />
-                <span className="text">Numbered List</span>
-                {blockType === 'ol' && <span className="active" />}
-            </button>
-            <button className="item" onClick={formatQuote}>
-                <span className="icon quote" />
-                <span className="text">Quote</span>
-                {blockType === 'quote' && <span className="active" />}
-            </button>
-            <button className="item" onClick={formatCode}>
-                <span className="icon code" />
-                <span className="text">Code Block</span>
-                {blockType === 'code' && <span className="active" />}
-            </button>
-        </div>
-    );
-}
-
-export default function ToolbarPlugin() {
-    const [editor] = useLexicalComposerContext();
-    const toolbarRef = useRef(null);
-    const [canUndo, setCanUndo] = useState(false);
-    const [canRedo, setCanRedo] = useState(false);
-    const [blockType, setBlockType] = useState('paragraph');
-    const [selectedElementKey, setSelectedElementKey] = useState(null);
-    const [showBlockOptionsDropDown, setShowBlockOptionsDropDown] = useState(false);
-    const [codeLanguage, setCodeLanguage] = useState('');
-    const [isRTL, setIsRTL] = useState(false);
-    const [isLink, setIsLink] = useState(false);
-    const [isBold, setIsBold] = useState(false);
-    const [isItalic, setIsItalic] = useState(false);
-    const [isUnderline, setIsUnderline] = useState(false);
-    const [isStrikethrough, setIsStrikethrough] = useState(false);
-    const [isCode, setIsCode] = useState(false);
-
+    // CALL IT WHEN EDITOR UPDATED OR DISPATCH "SELECTION_CHANGE_COMMAND"
     const updateToolbar = useCallback(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
@@ -440,29 +109,22 @@ export default function ToolbarPlugin() {
                     const type = parentList ? parentList.getTag() : element.getTag();
                     setBlockType(type);
                 } else {
-                    const type = $isHeadingNode(element) ? element.getTag() : element.getType();
+                    const type = element.getType();
                     setBlockType(type);
                     if ($isCodeNode(element)) {
                         setCodeLanguage(element.getLanguage() || getDefaultCodeLanguage());
                     }
                 }
             }
-            // Update text format
-            setIsBold(selection.hasFormat('bold'));
-            setIsItalic(selection.hasFormat('italic'));
-            setIsUnderline(selection.hasFormat('underline'));
-            setIsStrikethrough(selection.hasFormat('strikethrough'));
-            setIsCode(selection.hasFormat('code'));
-            setIsRTL($isParentElementRTL(selection));
 
-            // Update links
-            const node = getSelectedNode(selection);
-            const parent = node.getParent();
-            if ($isLinkNode(parent) || $isLinkNode(node)) {
-                setIsLink(true);
-            } else {
-                setIsLink(false);
-            }
+            // Update text format
+            setFormat({
+                bold: selection.hasFormat('bold'),
+                italic: selection.hasFormat('italic'),
+                underline: selection.hasFormat('underline'),
+                strikethrough: selection.hasFormat('strikethrough'),
+                code: selection.hasFormat('code'),
+            });
         }
     }, [editor]);
 
@@ -515,16 +177,9 @@ export default function ToolbarPlugin() {
         [editor, selectedElementKey]
     );
 
-    const insertLink = useCallback(() => {
-        if (!isLink) {
-            editor.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://');
-        } else {
-            editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
-        }
-    }, [editor, isLink]);
-
     return (
         <div className="flex items-center p-1 text-gray-600" ref={toolbarRef}>
+            {/* UNDO */}
             <button
                 disabled={!canUndo}
                 onClick={() => {
@@ -552,47 +207,45 @@ export default function ToolbarPlugin() {
                 </svg>
             </button>
             <Divider />
-            {supportedBlockTypes.has(blockType) && (
-                <>
-                    <button
-                        className="block-controls rounded-lg px-2 py-1.5 hover:bg-gray-100"
-                        onClick={() => setShowBlockOptionsDropDown(!showBlockOptionsDropDown)}
-                        aria-label="Formatting Options"
-                    >
-                        <span className={'icon block-type ' + blockType} />
-                        <span className="text">{blockTypeToBlockName[blockType]}</span>
-                        <i className="chevron-down" />
-                    </button>
-                    {showBlockOptionsDropDown &&
-                        createPortal(
-                            <BlockOptionsDropdownList
-                                editor={editor}
-                                blockType={blockType}
-                                toolbarRef={toolbarRef}
-                                setShowBlockOptionsDropDown={setShowBlockOptionsDropDown}
-                            />,
-                            document.body
-                        )}
-                    <Divider />
-                </>
-            )}
+
+            {/* CHECK BLOCK CODE TO CHANGE TOOLBAR */}
             {blockType === 'code' ? (
                 <>
                     <Select
-                        className="code-language rounded-lg px-2 py-1.5 hover:bg-gray-100"
+                        className="code-language rounded-lg px-2 py-1 hover:bg-gray-100"
                         onChange={onCodeLanguageSelect}
                         options={codeLanguges}
                         value={codeLanguage}
                     />
                     <i className="chevron-down inside" />
+                    <button
+                        onClick={() => toggleBlockType('code')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
+                        aria-label="Format Bold"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="h-5 w-5"
+                        >
+                            <path
+                                fillRule="evenodd"
+                                d="M6.28 5.22a.75.75 0 010 1.06L2.56 10l3.72 3.72a.75.75 0 01-1.06 1.06L.97 10.53a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0zm7.44 0a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L17.44 10l-3.72-3.72a.75.75 0 010-1.06zM11.377 2.011a.75.75 0 01.612.867l-2.5 14.5a.75.75 0 01-1.478-.255l2.5-14.5a.75.75 0 01.866-.612z"
+                                clipRule="evenodd"
+                            />
+                        </svg>
+                    </button>
                 </>
             ) : (
+                // DEFAULT TOOL BAR BUTTONS
+
                 <>
                     <button
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
                         }}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isBold ? 'active' : '')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
                         aria-label="Format Bold"
                     >
                         <svg
@@ -608,7 +261,7 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
                         }}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isItalic ? 'active' : '')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
                         aria-label="Format Italics"
                     >
                         <svg
@@ -624,7 +277,7 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
                         }}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isUnderline ? 'active' : '')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
                         aria-label="Format Underline"
                     >
                         <svg
@@ -638,25 +291,9 @@ export default function ToolbarPlugin() {
                     </button>
                     <button
                         onClick={() => {
-                            editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
-                        }}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isStrikethrough ? 'active' : '')}
-                        aria-label="Format Strikethrough"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            className="h-5 w-5"
-                            viewBox="0 0 16 16"
-                        >
-                            <path d="M6.333 5.686c0 .31.083.581.27.814H5.166a2.776 2.776 0 0 1-.099-.76c0-1.627 1.436-2.768 3.48-2.768 1.969 0 3.39 1.175 3.445 2.85h-1.23c-.11-1.08-.964-1.743-2.25-1.743-1.23 0-2.18.602-2.18 1.607zm2.194 7.478c-2.153 0-3.589-1.107-3.705-2.81h1.23c.144 1.06 1.129 1.703 2.544 1.703 1.34 0 2.31-.705 2.31-1.675 0-.827-.547-1.374-1.914-1.675L8.046 8.5H1v-1h14v1h-3.504c.468.437.675.994.675 1.697 0 1.826-1.436 2.967-3.644 2.967z" />
-                        </svg>
-                    </button>
-                    <button
-                        onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
                         }}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isCode ? 'active' : '')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
                         aria-label="Insert Code"
                     >
                         <svg
@@ -668,67 +305,48 @@ export default function ToolbarPlugin() {
                             <path d="M5.854 4.854a.5.5 0 1 0-.708-.708l-3.5 3.5a.5.5 0 0 0 0 .708l3.5 3.5a.5.5 0 0 0 .708-.708L2.707 8l3.147-3.146zm4.292 0a.5.5 0 0 1 .708-.708l3.5 3.5a.5.5 0 0 1 0 .708l-3.5 3.5a.5.5 0 0 1-.708-.708L13.293 8l-3.147-3.146z" />
                         </svg>
                     </button>
-                    <button
-                        onClick={insertLink}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 ' + (isLink ? 'active' : '')}
-                        aria-label="Insert Link"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            className="h-5 w-5"
-                            viewBox="0 0 16 16"
-                        >
-                            <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9c-.086 0-.17.01-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z" />
-                            <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4.02 4.02 0 0 1-.82 1H12a3 3 0 1 0 0-6H9z" />
-                        </svg>
-                    </button>
-                    {isLink && createPortal(<FloatingLinkEditor editor={editor} />, document.body)}
+
                     <Divider />
                     <button
-                        onClick={() => {
-                            editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
-                        }}
-                        className=" rounded-lg px-2 py-1.5 hover:bg-gray-100"
-                        aria-label="Left Align"
+                        onClick={() => toggleBlockType('code')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
+                        aria-label="Format Bold"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
                             fill="currentColor"
                             className="h-5 w-5"
-                            viewBox="0 0 16 16"
                         >
                             <path
                                 fillRule="evenodd"
-                                d="M2 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
+                                d="M6.28 5.22a.75.75 0 010 1.06L2.56 10l3.72 3.72a.75.75 0 01-1.06 1.06L.97 10.53a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0zm7.44 0a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L17.44 10l-3.72-3.72a.75.75 0 010-1.06zM11.377 2.011a.75.75 0 01.612.867l-2.5 14.5a.75.75 0 01-1.478-.255l2.5-14.5a.75.75 0 01.866-.612z"
+                                clipRule="evenodd"
                             />
                         </svg>
                     </button>
                     <button
-                        onClick={() => {
-                            editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
-                        }}
-                        className=" rounded-lg px-2 py-1.5 hover:bg-gray-100"
-                        aria-label="Center Align"
+                        onClick={() => toggleBlockType('ul')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
+                        aria-label="Format Italics"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
                             fill="currentColor"
                             className="h-5 w-5"
-                            viewBox="0 0 16 16"
                         >
                             <path
                                 fillRule="evenodd"
-                                d="M4 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
+                                d="M6 4.75A.75.75 0 016.75 4h10.5a.75.75 0 010 1.5H6.75A.75.75 0 016 4.75zM6 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H6.75A.75.75 0 016 10zm0 5.25a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H6.75a.75.75 0 01-.75-.75zM1.99 4.75a1 1 0 011-1H3a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1v-.01zM1.99 15.25a1 1 0 011-1H3a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1v-.01zM1.99 10a1 1 0 011-1H3a1 1 0 011 1v.01a1 1 0 01-1 1h-.01a1 1 0 01-1-1V10z"
+                                clipRule="evenodd"
                             />
                         </svg>
                     </button>
                     <button
-                        onClick={() => {
-                            editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
-                        }}
-                        className=" rounded-lg px-2 py-1.5 hover:bg-gray-100"
-                        aria-label="Right Align"
+                        onClick={() => toggleBlockType('ol')}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
+                        aria-label="Format Underline"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -738,29 +356,11 @@ export default function ToolbarPlugin() {
                         >
                             <path
                                 fillRule="evenodd"
-                                d="M6 12.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm4-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-4-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
+                                d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5z"
                             />
+                            <path d="M1.713 11.865v-.474H2c.217 0 .363-.137.363-.317 0-.185-.158-.31-.361-.31-.223 0-.367.152-.373.31h-.59c.016-.467.373-.787.986-.787.588-.002.954.291.957.703a.595.595 0 0 1-.492.594v.033a.615.615 0 0 1 .569.631c.003.533-.502.8-1.051.8-.656 0-1-.37-1.008-.794h.582c.008.178.186.306.422.309.254 0 .424-.145.422-.35-.002-.195-.155-.348-.414-.348h-.3zm-.004-4.699h-.604v-.035c0-.408.295-.844.958-.844.583 0 .96.326.96.756 0 .389-.257.617-.476.848l-.537.572v.03h1.054V9H1.143v-.395l.957-.99c.138-.142.293-.304.293-.508 0-.18-.147-.32-.342-.32a.33.33 0 0 0-.342.338v.041zM2.564 5h-.635V2.924h-.031l-.598.42v-.567l.629-.443h.635V5z" />
                         </svg>
                     </button>
-                    <button
-                        onClick={() => {
-                            editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify');
-                        }}
-                        className="rounded-lg px-2 py-1.5 hover:bg-gray-100"
-                        aria-label="Justify Align"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            className="h-5 w-5"
-                            viewBox="0 0 16 16"
-                        >
-                            <path
-                                fillRule="evenodd"
-                                d="M2 12.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
-                            />
-                        </svg>
-                    </button>{' '}
                 </>
             )}
         </div>
