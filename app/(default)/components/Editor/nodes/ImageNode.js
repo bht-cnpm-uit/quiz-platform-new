@@ -21,7 +21,6 @@ import {
     KEY_DELETE_COMMAND,
 } from 'lexical';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
-const SELECT_IMAGE_COMMAND = createCommand('SELECT_IMAGE_COMMAND');
 import clsx from 'clsx';
 
 function ImageComponent({ src, nodeKey }) {
@@ -33,7 +32,7 @@ function ImageComponent({ src, nodeKey }) {
 
     const deleteImage = useCallback(
         (payload) => {
-            if (!editor.isEditable()) return false;
+            // if (!editor.isEditable()) return false;
             if (isSelected && $isNodeSelection(selection)) {
                 const event = payload;
                 event.preventDefault();
@@ -60,7 +59,7 @@ function ImageComponent({ src, nodeKey }) {
             editor.registerCommand(
                 CLICK_COMMAND,
                 (payload) => {
-                    if (!editor.isEditable()) return false;
+                    // if (!editor.isEditable()) return false;
 
                     const event = payload;
 
