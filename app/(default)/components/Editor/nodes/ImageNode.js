@@ -23,12 +23,44 @@ import {
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 
+function FloatingEditImage({ src, onSubmit }) {
+    const [value, setValue] = useState(src);
+    const inputRef = useRef(null);
+    return (
+        <div className="absolute inset-0 flex items-center justify-center">
+            <div className="flex flex-col items-center rounded-lg border bg-white p-2">
+                <div className="font-bold">Link ảnh</div>
+                <input
+                    ref={inputRef}
+                    className="rounded-md bg-gray-100 px-2 py-1"
+                    type="text"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    onBlur={() => onSubmit(value)}
+                    onKeyDown={(e) => e.stopPropagation()}
+                />
+            </div>
+        </div>
+    );
+}
+
 function ImageComponent({ src, nodeKey }) {
     const [editor] = useLexicalComposerContext();
     const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey);
     const [selection, setSelection] = useState(null);
     const [isEditable, setEditable] = useState(true);
+    const [error, setError] = useState(false);
     const ref = useRef(null);
+
+    function changeSrc(value) {
+        editor.update(() => {
+            const imageNode = $getNodeByKey(nodeKey);
+            if ($isImageNode(imageNode)) {
+                console.log(imageNode);
+                imageNode.setSrc(value);
+            }
+        });
+    }
 
     const deleteImage = useCallback(
         (payload) => {
@@ -48,13 +80,16 @@ function ImageComponent({ src, nodeKey }) {
     );
 
     useEffect(() => {
+        setSelected(true);
+    }, []);
+
+    useEffect(() => {
         return mergeRegister(
             editor.registerUpdateListener(({ editorState }) => {
                 setSelection(editorState.read(() => $getSelection()));
             }),
             editor.registerEditableListener((isEditable) => {
                 setEditable(isEditable);
-                console.log('set');
             }),
             editor.registerCommand(
                 CLICK_COMMAND,
@@ -62,9 +97,8 @@ function ImageComponent({ src, nodeKey }) {
                     // if (!editor.isEditable()) return false;
 
                     const event = payload;
-
-                    if (event.target === ref.current) {
-                        setSelected(!isSelected);
+                    if (ref.current.contains(event.target)) {
+                        setSelected(true);
                         return true;
                     }
                     return false;
@@ -77,14 +111,17 @@ function ImageComponent({ src, nodeKey }) {
     }, [clearSelection, editor, isSelected, nodeKey, setSelected]);
     const isFocused = $isNodeSelection(selection) && isSelected && isEditable;
     return (
-        <div className="flex justify-center">
+        <div className="relative" ref={ref}>
             <img
                 src={src}
                 className={clsx({
                     'ring ring-primary': isFocused,
                 })}
-                ref={ref}
+                // onError={() => setError(true)}
+                // onLoad={() => setError(false)}
             />
+            {/* {error && <div className="h-[100px] bg-gray-200"></div>} */}
+            {isFocused && <FloatingEditImage src={src} onSubmit={changeSrc} />}
         </div>
     );
 }
@@ -104,7 +141,9 @@ export class ImageNode extends DecoratorNode {
     }
 
     createDOM() {
-        return document.createElement('div');
+        const div = document.createElement('div');
+        div.className = 'flex justify-center';
+        return div;
     }
 
     updateDOM() {
@@ -113,6 +152,11 @@ export class ImageNode extends DecoratorNode {
 
     isInline() {
         return false;
+    }
+
+    setSrc(src) {
+        const writable = this.getWritable();
+        writable.__src = src;
     }
 
     decorate() {
