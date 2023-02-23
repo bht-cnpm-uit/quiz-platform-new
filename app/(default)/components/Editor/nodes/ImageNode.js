@@ -26,18 +26,24 @@ import clsx from 'clsx';
 function FloatingEditImage({ src, onSubmit }) {
     const [value, setValue] = useState(src);
     const inputRef = useRef(null);
+    function handleKeydown(e) {
+        e.stopPropagation();
+        if (e.key === 'Enter') {
+            inputRef.current.blur();
+        }
+    }
     return (
         <div className="absolute inset-0 flex items-center justify-center">
-            <div className="flex flex-col items-center rounded-lg border bg-white p-2">
+            <div className="flex min-w-[300px] flex-col items-center rounded-lg border bg-white p-2">
                 <div className="font-bold">Link ảnh</div>
                 <input
                     ref={inputRef}
-                    className="rounded-md bg-gray-100 px-2 py-1"
+                    className="w-full rounded-md bg-gray-100 px-2 py-1"
                     type="text"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
                     onBlur={() => onSubmit(value)}
-                    onKeyDown={(e) => e.stopPropagation()}
+                    onKeyDown={handleKeydown}
                 />
             </div>
         </div>
@@ -112,15 +118,21 @@ function ImageComponent({ src, nodeKey }) {
     const isFocused = $isNodeSelection(selection) && isSelected && isEditable;
     return (
         <div className="relative" ref={ref}>
-            <img
-                src={src}
+            <div
                 className={clsx({
                     'ring ring-primary': isFocused,
                 })}
-                // onError={() => setError(true)}
-                // onLoad={() => setError(false)}
-            />
-            {/* {error && <div className="h-[100px] bg-gray-200"></div>} */}
+            >
+                <img
+                    src={src}
+                    className={clsx('max-h-[300px] object-contain', {
+                        hidden: error,
+                    })}
+                    onError={() => setError(true)}
+                    onLoad={() => setError(false)}
+                />
+                {error && <img src="/images/placeholder.png" />}
+            </div>
             {isFocused && <FloatingEditImage src={src} onSubmit={changeSrc} />}
         </div>
     );
