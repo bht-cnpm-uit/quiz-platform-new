@@ -20,6 +20,7 @@ import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, $isListNode
 import { $createCodeNode, $isCodeNode, getDefaultCodeLanguage, getCodeLanguages } from '@lexical/code';
 import { INSERT_IMAGE_COMMAND } from './ImagePlugin';
 import { INSERT_POLL_COMMAND } from './PollPlugin';
+import clsx from 'clsx';
 
 const LowPriority = 1;
 
@@ -241,7 +242,9 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
                         }}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
+                        className={clsx('rounded-lg px-2 py-1.5 hover:bg-gray-100', {
+                            'bg-primary/10': format.bold,
+                        })}
                         aria-label="Format Bold"
                     >
                         <svg
@@ -257,7 +260,9 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
                         }}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
+                        className={clsx('rounded-lg px-2 py-1.5 hover:bg-gray-100', {
+                            'bg-primary/10': format.italic,
+                        })}
                         aria-label="Format Italics"
                     >
                         <svg
@@ -273,7 +278,9 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
                         }}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
+                        className={clsx('rounded-lg px-2 py-1.5 hover:bg-gray-100', {
+                            'bg-primary/10': format.underline,
+                        })}
                         aria-label="Format Underline"
                     >
                         <svg
@@ -289,7 +296,9 @@ export default function ToolbarPlugin() {
                         onClick={() => {
                             editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
                         }}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
+                        className={clsx('rounded-lg px-2 py-1.5 hover:bg-gray-100', {
+                            'bg-primary/10': format.code,
+                        })}
                         aria-label="Insert Code"
                     >
                         <svg
@@ -305,8 +314,10 @@ export default function ToolbarPlugin() {
                     <Divider />
                     <button
                         onClick={() => toggleBlockType('code')}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
-                        aria-label="Format Bold"
+                        className={clsx('rounded-lg px-2 py-1.5 hover:bg-gray-100', {
+                            'bg-primary/10': blockType === 'code',
+                        })}
+                        aria-label="Format Code Block"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -323,8 +334,10 @@ export default function ToolbarPlugin() {
                     </button>
                     <button
                         onClick={() => toggleBlockType('ul')}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
-                        aria-label="Format Italics"
+                        className={clsx('rounded-lg px-2 py-1.5 hover:bg-gray-100', {
+                            'bg-primary/10': blockType === 'ul',
+                        })}
+                        aria-label="Format Unordered List"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -341,8 +354,10 @@ export default function ToolbarPlugin() {
                     </button>
                     <button
                         onClick={() => toggleBlockType('ol')}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
-                        aria-label="Format Underline"
+                        className={clsx('rounded-lg px-2 py-1.5 hover:bg-gray-100', {
+                            'bg-primary/10': blockType === 'ol',
+                        })}
+                        aria-label="Format Ordered List"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -362,36 +377,20 @@ export default function ToolbarPlugin() {
                     <button
                         onClick={() => editor.dispatchCommand(INSERT_IMAGE_COMMAND, 'https://picsum.photos/400/300')}
                         className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
-                        aria-label="Format Bold"
+                        aria-label="Image"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
                             className="h-5 w-5"
                         >
                             <path
-                                fillRule="evenodd"
-                                d="M6.28 5.22a.75.75 0 010 1.06L2.56 10l3.72 3.72a.75.75 0 01-1.06 1.06L.97 10.53a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0zm7.44 0a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L17.44 10l-3.72-3.72a.75.75 0 010-1.06zM11.377 2.011a.75.75 0 01.612.867l-2.5 14.5a.75.75 0 01-1.478-.255l2.5-14.5a.75.75 0 01.866-.612z"
-                                clipRule="evenodd"
-                            />
-                        </svg>
-                    </button>
-                    <button
-                        onClick={() => editor.dispatchCommand(INSERT_POLL_COMMAND, 'Poll random')}
-                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
-                        aria-label="Format Bold"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                            className="h-5 w-5"
-                        >
-                            <path
-                                fillRule="evenodd"
-                                d="M6.28 5.22a.75.75 0 010 1.06L2.56 10l3.72 3.72a.75.75 0 01-1.06 1.06L.97 10.53a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 0zm7.44 0a.75.75 0 011.06 0l4.25 4.25a.75.75 0 010 1.06l-4.25 4.25a.75.75 0 01-1.06-1.06L17.44 10l-3.72-3.72a.75.75 0 010-1.06zM11.377 2.011a.75.75 0 01.612.867l-2.5 14.5a.75.75 0 01-1.478-.255l2.5-14.5a.75.75 0 01.866-.612z"
-                                clipRule="evenodd"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
                             />
                         </svg>
                     </button>
