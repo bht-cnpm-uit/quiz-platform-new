@@ -152,6 +152,20 @@ export class ImageNode extends DecoratorNode {
         return new ImageNode(node.__src, node.__key);
     }
 
+    static importJSON(serializedNode) {
+        const { src } = serializedNode;
+        const node = $createImageNode(src);
+        return node;
+    }
+
+    exportJSON() {
+        return {
+            src: this.__src,
+            type: 'image',
+            version: 1,
+        };
+    }
+
     createDOM() {
         const div = document.createElement('div');
         div.className = 'flex justify-center';
