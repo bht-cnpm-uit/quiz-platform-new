@@ -104,6 +104,7 @@ function ImageComponent({ src, nodeKey }) {
 
                     const event = payload;
                     if (ref.current.contains(event.target)) {
+                        clearSelection();
                         setSelected(true);
                         return true;
                     }

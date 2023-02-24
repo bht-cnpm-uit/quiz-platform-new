@@ -19,8 +19,8 @@ import { $getNearestNodeOfType, mergeRegister } from '@lexical/utils';
 import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, $isListNode, ListNode } from '@lexical/list';
 import { $createCodeNode, $isCodeNode, getDefaultCodeLanguage, getCodeLanguages } from '@lexical/code';
 import { INSERT_IMAGE_COMMAND } from './ImagePlugin';
-import { INSERT_POLL_COMMAND } from './PollPlugin';
 import clsx from 'clsx';
+import { INSERT_MATH_COMMAND } from './MathPlugin';
 
 const LowPriority = 1;
 
@@ -391,6 +391,26 @@ export default function ToolbarPlugin() {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                            />
+                        </svg>
+                    </button>
+                    <button
+                        onClick={() => editor.dispatchCommand(INSERT_MATH_COMMAND, { latex: 'x^3', isInline: true })}
+                        className={' rounded-lg px-2 py-1.5 hover:bg-gray-100 '}
+                        aria-label="Math"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="h-5 w-5"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M4.745 3A23.933 23.933 0 003 12c0 3.183.62 6.22 1.745 9M19.5 3c.967 2.78 1.5 5.817 1.5 9s-.533 6.22-1.5 9M8.25 8.885l1.444-.89a.75.75 0 011.105.402l2.402 7.206a.75.75 0 001.104.401l1.445-.889m-8.25.75l.213.09a1.687 1.687 0 002.062-.617l4.45-6.676a1.688 1.688 0 012.062-.618l.213.09"
                             />
                         </svg>
                     </button>
