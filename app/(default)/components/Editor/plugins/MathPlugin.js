@@ -2,6 +2,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { $wrapNodeInElement, mergeRegister } from '@lexical/utils';
 import {
     $createParagraphNode,
+    $createTextNode,
     $insertNodes,
     $isRootOrShadowRoot,
     COMMAND_PRIORITY_EDITOR,
@@ -26,7 +27,9 @@ export default function MathPlugin({ captionsEnabled }) {
                 INSERT_MATH_COMMAND,
                 (payload) => {
                     const mathNode = $createMathNode(payload.latex, payload.isInline);
-                    $insertNodes([mathNode]);
+                    const textNodeBefore = $createTextNode(' ');
+                    const textNodeAfter = $createTextNode(' ');
+                    $insertNodes([textNodeBefore, mathNode, textNodeAfter]);
                     if ($isRootOrShadowRoot(mathNode.getParentOrThrow())) {
                         $wrapNodeInElement(mathNode, $createParagraphNode).selectEnd();
                     }
