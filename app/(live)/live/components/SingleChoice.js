@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
+import ReadOnlyEditor from '~/app/components/Editor/ReadOnlyEditor';
 
 const anim = {
     hidden: { opacity: 0, y: 20 },
@@ -91,7 +92,9 @@ export default function SingleChoice({
             variants={anim}
         >
             {getIcon()}
-            <p>{children}</p>
+            <div>
+                <ReadOnlyEditor content={children} />
+            </div>
         </motion.div>
     );
 }

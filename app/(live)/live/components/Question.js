@@ -155,7 +155,6 @@ export default function Question({ questionIndex }) {
                         transition={{ duration: 0.2, delay: 0.1, layout: { duration: 0.1 } }}
                         className="mt-4 text-gray-700"
                     >
-                        {/* {question.content} */}
                         <ReadOnlyEditor content={question.content} />
                     </motion.div>
 
@@ -204,7 +203,9 @@ export default function Question({ questionIndex }) {
                                     layout
                                 >
                                     <div className="font-semibold">Gợi ý:</div>
-                                    <div>{question?.hint}</div>
+                                    <div>
+                                        <ReadOnlyEditor content={question?.hint} />
+                                    </div>
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -319,7 +320,9 @@ export default function Question({ questionIndex }) {
                                         className="mt-2"
                                     >
                                         <div className="font-semibold">Giải thích:</div>
-                                        <div>{question?.explanation}</div>
+                                        <div>
+                                            <ReadOnlyEditor content={question?.explanation} />
+                                        </div>
                                     </motion.div>
                                 )}
                         </AnimatePresence>
