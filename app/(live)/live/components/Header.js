@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useDispatch, useSelector } from 'react-redux';
-import Modal from '~/components/Modal';
+import Modal from '~/app/components/Modal';
 import QUESTION_STATE from '~/constants/question-state';
 import QUIZ_STATE from '~/constants/quiz-state';
 import { quizSelector } from '~/redux/selectors';

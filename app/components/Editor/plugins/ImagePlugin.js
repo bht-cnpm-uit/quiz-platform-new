@@ -13,7 +13,7 @@ import { $createImageNode, ImageNode } from '../nodes/ImageNode';
 
 export const INSERT_IMAGE_COMMAND = createCommand('INSERT_IMAGE_COMMAND');
 
-export default function ImagesPlugin({ captionsEnabled }) {
+export default function ImagesPlugin() {
     const [editor] = useLexicalComposerContext();
 
     useEffect(() => {
@@ -36,7 +36,7 @@ export default function ImagesPlugin({ captionsEnabled }) {
                 COMMAND_PRIORITY_EDITOR
             )
         );
-    }, [captionsEnabled, editor]);
+    }, [editor]);
 
     return null;
 }

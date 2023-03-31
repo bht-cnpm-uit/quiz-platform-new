@@ -1,6 +1,6 @@
 'use client';
 
-import Theme from './themes/Theme';
+import Theme from '../../../configs/editorThemes/Theme';
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';

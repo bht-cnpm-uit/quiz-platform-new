@@ -8,6 +8,7 @@ import { quizActions } from '~/redux/slices/quizSlice';
 import QUESTION_STATE from '~/constants/question-state';
 import clsx from 'clsx';
 import QUIZ_STATE from '~/constants/quiz-state';
+import ReadOnlyEditor from '~/app/components/Editor/ReadOnlyEditor';
 
 export default function Question({ questionIndex }) {
     const quiz = useSelector(quizSelector);
@@ -147,15 +148,16 @@ export default function Question({ questionIndex }) {
                             </p>
                         </div>
                     </motion.div>
-                    <motion.p
+                    <motion.div
                         layout
                         initial={{ x: 100, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ duration: 0.2, delay: 0.1, layout: { duration: 0.1 } }}
                         className="mt-4 text-gray-700"
                     >
-                        {question.content}
-                    </motion.p>
+                        {/* {question.content} */}
+                        <ReadOnlyEditor content={question.content} />
+                    </motion.div>
 
                     {/* HINT */}
                     <motion.div

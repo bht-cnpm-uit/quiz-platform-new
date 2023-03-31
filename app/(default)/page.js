@@ -1,4 +1,4 @@
-import Editor from './components/Editor';
+import Editor from '../components/Editor';
 import 'katex/dist/katex.min.css';
 import { InlineMath } from 'react-katex';
 
