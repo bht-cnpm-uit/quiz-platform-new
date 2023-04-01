@@ -1,6 +1,6 @@
 import { db } from '~/configs/firebase';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
-import Page from '../components/Page';
+import ReadOnlyEditor from '~/app/components/Editor/ReadOnlyEditor';
 
 async function getData(quizId) {
     try {
@@ -24,8 +24,16 @@ async function getData(quizId) {
     }
 }
 
-export default async function Live({ params }) {
-    const quiz = await getData(params.quizId);
-
-    return <Page quizRaw={quiz} />;
+export default async function EditQuiz() {
+    const quiz = await getData('2N1o0E3jxeH3v8trhYPj');
+    return (
+        <div className="mx-auto max-w-[700px]">
+            <h1>{quiz.name}</h1>
+            {quiz.questions.map((question) => (
+                <div className="border py-4">
+                    <ReadOnlyEditor content={question.content} />
+                </div>
+            ))}
+        </div>
+    );
 }
