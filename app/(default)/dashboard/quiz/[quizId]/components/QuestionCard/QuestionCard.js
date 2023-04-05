@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { db } from '~/configs/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import QuestionEditor from '~/app/components/Editor/QuestionEditor';
 import ReadOnlyEditor from '~/app/components/Editor/ReadOnlyEditor';
 import AnswerCard from './AnswerCard';
@@ -9,11 +9,11 @@ import clsx from 'clsx';
 import { nanoid } from 'nanoid';
 import { toast } from 'react-toastify';
 
-export default function QuestionCard({ quizId, question }) {
+export default function QuestionCard({ quizId, question, editingInDefault = false }) {
     const updateSuccessNotify = () => toast.success('Cập nhật câu hỏi thành công!');
     const deleteSuccessNotify = () => toast.success('Xoá câu hỏi thành công!');
     const errorNotify = () => toast.error('Có lỗi xảy ra!');
-    const [editing, setEditing] = useState(false);
+    const [editing, setEditing] = useState(editingInDefault);
     const [loading, setLoading] = useState(false);
     const [questionEditing, setQuestionEditing] = useState(question);
 
@@ -31,6 +31,23 @@ export default function QuestionCard({ quizId, question }) {
             .finally(() => {
                 setEditing(false);
                 setLoading(false);
+            });
+    }
+
+    function handleDeleteQuestion() {
+        if (!confirm('Bạn có chắc chắn xoá câu hỏi? Không thể khôi phục!')) {
+            return;
+        }
+        const questionDocRef = doc(db, 'quizzes', quizId, 'questions', question.id);
+        setLoading(true);
+        deleteDoc(questionDocRef)
+            .then(() => {
+                deleteSuccessNotify();
+            })
+            .catch((error) => {
+                errorNotify();
+                setLoading(false);
+                console.log(error);
             });
     }
 
@@ -93,7 +110,10 @@ export default function QuestionCard({ quizId, question }) {
                         >
                             Sửa
                         </button>
-                        <button className="rounded bg-red-500 py-1 px-5 text-white hover:bg-red-600" onClick={() => {}}>
+                        <button
+                            className="rounded bg-red-500 py-1 px-5 text-white hover:bg-red-600"
+                            onClick={() => handleDeleteQuestion()}
+                        >
                             Xoá
                         </button>
                     </>

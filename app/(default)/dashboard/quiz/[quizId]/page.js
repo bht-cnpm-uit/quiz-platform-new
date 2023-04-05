@@ -1,7 +1,7 @@
 import { db } from '~/configs/firebase';
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
-import ReadOnlyEditor from '~/app/components/Editor/ReadOnlyEditor';
 import QuestionCard from './components/QuestionCard';
+import AddQuestionButton from './components/AddQuestionButton/AddQuestionButton';
 
 async function getData(quizId) {
     try {
@@ -27,12 +27,14 @@ async function getData(quizId) {
 
 export default async function EditQuiz() {
     const quiz = await getData('2N1o0E3jxeH3v8trhYPj');
+
     return (
         <div className="mx-auto w-[700px]">
             <h1>{quiz.name}</h1>
             {quiz.questions.map((question) => (
                 <QuestionCard question={question} quizId={quiz.id} key={question.id} />
             ))}
+            <AddQuestionButton />
         </div>
     );
 }
