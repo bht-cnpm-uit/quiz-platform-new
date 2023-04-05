@@ -19,7 +19,7 @@ export const quizSlice = createSlice({
             /**
              * {
              *      questionIndex: Number
-             *      chosenAnswer: Number
+             *      chosenAnswer: String
              * }
              */
             state.questions[action.payload.questionIndex].chosenAnswer = action.payload.chosenAnswer;

@@ -17,11 +17,11 @@ const animGroup = {
 };
 export default function SingleChoiceGroup({ answers, correctAnswer, chosenAnswer, questionIndex, submited }) {
     const dispatch = useDispatch();
-    function handleChoose(answer) {
+    function handleChoose(answeriId) {
         dispatch(
             quizActions.chooseAnswer({
                 questionIndex,
-                chosenAnswer: answer,
+                chosenAnswer: answeriId,
             })
         );
     }
@@ -37,13 +37,13 @@ export default function SingleChoiceGroup({ answers, correctAnswer, chosenAnswer
             {answers?.map((answer, index) => (
                 <SingleChoice
                     key={index + questionIndex * 10}
-                    chosen={chosenAnswer === index}
-                    incorrect={submited && chosenAnswer === index && chosenAnswer !== correctAnswer}
-                    answer={submited && correctAnswer === index}
+                    chosen={chosenAnswer === answer.id}
+                    incorrect={submited && chosenAnswer === answer.id && chosenAnswer !== correctAnswer}
+                    answer={submited && correctAnswer === answer.id}
                     disabled={submited}
-                    onClick={() => handleChoose(index)}
+                    onClick={() => handleChoose(answer.id)}
                 >
-                    {answer}
+                    {answer.content}
                 </SingleChoice>
             ))}
         </motion.div>

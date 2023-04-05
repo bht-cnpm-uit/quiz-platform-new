@@ -28,7 +28,7 @@ const editorConfig = {
 
 export default function ReadOnlyEditor({ content, className }) {
     return (
-        <LexicalComposer initialConfig={editorConfig}>
+        <LexicalComposer initialConfig={{ ...editorConfig, editorState: content }}>
             <RichTextPlugin
                 contentEditable={<ContentEditable className={className} />}
                 ErrorBoundary={LexicalErrorBoundary}
@@ -36,7 +36,7 @@ export default function ReadOnlyEditor({ content, className }) {
             <CodeHighlightPlugin />
             <ListPlugin />
             <MathPlugin />
-            <ParseStatePlugin content={content} />
+            {/* <ParseStatePlugin content={content} /> */}
         </LexicalComposer>
     );
 }
