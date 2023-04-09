@@ -55,22 +55,22 @@ export default function Modal({ setIsOpen }) {
         console.log(newQuestion);
     }
 
-    // Explaination handler
-    function handleExplainationChange(editorState) {
+    // Explanation handler
+    function handleExplanationChange(editorState) {
         const newQuestion = structuredClone(question);
-        newQuestion.explaination = JSON.stringify(editorState.toJSON());
+        newQuestion.explanation = JSON.stringify(editorState.toJSON());
         setQuestion(newQuestion);
     }
 
-    function handleAddExplaination() {
+    function handleAddExplanation() {
         const newQuestion = structuredClone(question);
-        newQuestion.explaination = `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Phần giải thích ...","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
+        newQuestion.explanation = `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Phần giải thích ...","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
         setQuestion(newQuestion);
     }
 
-    function handleDeleteExplaination() {
+    function handleDeleteExplanation() {
         const newQuestion = structuredClone(question);
-        delete newQuestion.explaination;
+        delete newQuestion.explanation;
         setQuestion(newQuestion);
         console.log(newQuestion);
     }
@@ -165,20 +165,20 @@ export default function Modal({ setIsOpen }) {
                         </div>
                     )}
 
-                    {question.explaination ? (
+                    {question.explanation ? (
                         <details>
                             <summary className="mt-2 font-semibold">
                                 <span className="mr-3">Giải thích:</span>
                                 <button
                                     className="my-2 rounded border px-3 py-0.5 font-semibold text-red-500 hover:border-red-500"
-                                    onClick={handleDeleteExplaination}
+                                    onClick={handleDeleteExplanation}
                                 >
                                     Xoá giải thích
                                 </button>
                             </summary>
                             <FullEditor
-                                content={question.explaination}
-                                onEditorChange={handleExplainationChange}
+                                content={question.explanation}
+                                onEditorChange={handleExplanationChange}
                                 placeholder="Nhập giải thích ..."
                             />
                         </details>
@@ -186,7 +186,7 @@ export default function Modal({ setIsOpen }) {
                         <div className="my-2">
                             <button
                                 className="rounded border px-3 py-0.5 font-semibold text-primary hover:border-primary"
-                                onClick={handleAddExplaination}
+                                onClick={handleAddExplanation}
                             >
                                 Thêm giải thích
                             </button>

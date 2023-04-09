@@ -8,10 +8,10 @@ import { ListItemNode, ListNode } from '@lexical/list';
 import { CodeHighlightNode, CodeNode } from '@lexical/code';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import CodeHighlightPlugin from '~/app/components/Editor/plugins/CodeHighlightPlugin';
-import MathPlugin from '~/app/components/Editor/plugins/MathPlugin';
 import exampleTheme from '~/configs/editorThemes/Theme';
 import { ImageNodeReadOnly } from '~/app/components/Editor/nodes/ImageNodeReadOnly';
 import { MathNodeReadOnly } from './nodes/MathNodeReadOnly';
+import clsx from 'clsx';
 
 const editorConfig = {
     // The editor theme
@@ -29,7 +29,7 @@ export default function ReadOnlyEditor({ content, className }) {
     return (
         <LexicalComposer initialConfig={{ ...editorConfig, editorState: content }}>
             <RichTextPlugin
-                contentEditable={<ContentEditable className={className} />}
+                contentEditable={<ContentEditable className={clsx(className, 'editor-input')} />}
                 ErrorBoundary={LexicalErrorBoundary}
             />
             <CodeHighlightPlugin />
