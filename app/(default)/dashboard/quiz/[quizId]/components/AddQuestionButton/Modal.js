@@ -6,7 +6,7 @@ import placeholderQuestion from '~/data/placeholderQuestion';
 import { toast } from 'react-toastify';
 import { db } from '~/configs/firebase';
 import clsx from 'clsx';
-import QuestionEditor from '~/app/components/Editor/QuestionEditor';
+import FullEditor from '~/app/components/Editor/FullEditor';
 import { nanoid } from 'nanoid';
 import { addDoc, collection } from 'firebase/firestore';
 
@@ -19,7 +19,7 @@ export default function Modal({ setIsOpen }) {
     async function handleCreateQuestion() {
         const questionsCollectionRef = collection(db, 'quizzes', '2N1o0E3jxeH3v8trhYPj', 'questions');
         setLoading(true);
-        const newQuestionDocRef = await addDoc(questionsCollectionRef, placeholderQuestion);
+        const newQuestionDocRef = await addDoc(questionsCollectionRef, question);
         setLoading(false);
         if (newQuestionDocRef) {
             createSuccessNotify();
@@ -34,6 +34,48 @@ export default function Modal({ setIsOpen }) {
         newQuestion.content = JSON.stringify(editorState.toJSON());
         setQuestion(newQuestion);
     }
+
+    // Hint handler
+    function handleHintChange(editorState) {
+        const newQuestion = structuredClone(question);
+        newQuestion.hint = JSON.stringify(editorState.toJSON());
+        setQuestion(newQuestion);
+    }
+
+    function handleAddHint() {
+        const newQuestion = structuredClone(question);
+        newQuestion.hint = `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Phần gợi ý ...","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
+        setQuestion(newQuestion);
+    }
+
+    function handleDeleteHint() {
+        const newQuestion = structuredClone(question);
+        delete newQuestion.hint;
+        setQuestion(newQuestion);
+        console.log(newQuestion);
+    }
+
+    // Explaination handler
+    function handleExplainationChange(editorState) {
+        const newQuestion = structuredClone(question);
+        newQuestion.explaination = JSON.stringify(editorState.toJSON());
+        setQuestion(newQuestion);
+    }
+
+    function handleAddExplaination() {
+        const newQuestion = structuredClone(question);
+        newQuestion.explaination = `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Phần giải thích ...","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
+        setQuestion(newQuestion);
+    }
+
+    function handleDeleteExplaination() {
+        const newQuestion = structuredClone(question);
+        delete newQuestion.explaination;
+        setQuestion(newQuestion);
+        console.log(newQuestion);
+    }
+
+    // Answer handler
 
     function handleAnswerChange(index, editorState) {
         const newQuestion = structuredClone(question);
@@ -93,8 +135,63 @@ export default function Modal({ setIsOpen }) {
                     </button>
                 </div>
                 <div className="">
-                    <QuestionEditor content={question.content} onEditorChange={handleContentQuestionChange} />
+                    <FullEditor content={question.content} onEditorChange={handleContentQuestionChange} />
 
+                    {question.hint ? (
+                        <details>
+                            <summary className="mt-2 font-semibold">
+                                <span className="mr-3">Gợi ý:</span>
+                                <button
+                                    className="my-2 rounded border px-3 py-0.5 font-semibold text-red-500 hover:border-red-500"
+                                    onClick={handleDeleteHint}
+                                >
+                                    Xoá gợi ý
+                                </button>
+                            </summary>
+                            <FullEditor
+                                content={question.hint}
+                                onEditorChange={handleHintChange}
+                                placeholder="Nhập gợi ý ..."
+                            />
+                        </details>
+                    ) : (
+                        <div className="my-2">
+                            <button
+                                className="my-2 rounded border px-3 py-0.5 font-semibold text-primary hover:border-primary"
+                                onClick={handleAddHint}
+                            >
+                                Thêm gợi ý
+                            </button>
+                        </div>
+                    )}
+
+                    {question.explaination ? (
+                        <details>
+                            <summary className="mt-2 font-semibold">
+                                <span className="mr-3">Giải thích:</span>
+                                <button
+                                    className="my-2 rounded border px-3 py-0.5 font-semibold text-red-500 hover:border-red-500"
+                                    onClick={handleDeleteExplaination}
+                                >
+                                    Xoá giải thích
+                                </button>
+                            </summary>
+                            <FullEditor
+                                content={question.explaination}
+                                onEditorChange={handleExplainationChange}
+                                placeholder="Nhập giải thích ..."
+                            />
+                        </details>
+                    ) : (
+                        <div className="my-2">
+                            <button
+                                className="rounded border px-3 py-0.5 font-semibold text-primary hover:border-primary"
+                                onClick={handleAddExplaination}
+                            >
+                                Thêm giải thích
+                            </button>
+                        </div>
+                    )}
                     <div className="mt-2 font-semibold">Câu trả lời</div>
                     <div>
                         {question.answers.map((answer, index) => (

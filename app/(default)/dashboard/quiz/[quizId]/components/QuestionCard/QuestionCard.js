@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { db } from '~/configs/firebase';
 import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import QuestionEditor from '~/app/components/Editor/QuestionEditor';
+import FullEditor from '~/app/components/Editor/FullEditor';
 import ReadOnlyEditor from '~/app/components/Editor/ReadOnlyEditor';
 import AnswerCard from './AnswerCard';
 import clsx from 'clsx';
@@ -56,12 +56,52 @@ export default function QuestionCard({ quizId, question, editingInDefault = fals
         newQuestion.content = JSON.stringify(editorState.toJSON());
         setQuestionEditing(newQuestion);
     }
-
     function handleCancelQuestionChange() {
         setQuestionEditing(question);
         setEditing(false);
     }
 
+    // Hint handler
+    function handleHintChange(editorState) {
+        const newQuestion = structuredClone(questionEditing);
+        newQuestion.hint = JSON.stringify(editorState.toJSON());
+        setQuestionEditing(newQuestion);
+    }
+
+    function handleAddHint() {
+        const newQuestion = structuredClone(questionEditing);
+        newQuestion.hint = `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Phần gợi ý ...","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
+        setQuestionEditing(newQuestion);
+    }
+
+    function handleDeleteHint() {
+        const newQuestion = structuredClone(questionEditing);
+        delete newQuestion.hint;
+        setQuestionEditing(newQuestion);
+        console.log(newQuestion);
+    }
+
+    // Explaination handler
+    function handleExplainationChange(editorState) {
+        const newQuestion = structuredClone(questionEditing);
+        newQuestion.explaination = JSON.stringify(editorState.toJSON());
+        setQuestionEditing(newQuestion);
+    }
+
+    function handleAddExplaination() {
+        const newQuestion = structuredClone(questionEditing);
+        newQuestion.explaination = `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"Phần giải thích ...","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
+        setQuestionEditing(newQuestion);
+    }
+
+    function handleDeleteExplaination() {
+        const newQuestion = structuredClone(questionEditing);
+        delete newQuestion.explaination;
+        setQuestionEditing(newQuestion);
+        console.log(newQuestion);
+    }
+
+    // Answer handler
     function handleAnswerChange(index, editorState) {
         const newQuestion = structuredClone(questionEditing);
         if (newQuestion.answers[index] !== undefined) {
@@ -136,9 +176,87 @@ export default function QuestionCard({ quizId, question, editingInDefault = fals
                 )}
             </div>
             {editing ? (
-                <QuestionEditor content={question.content} onEditorChange={handleContentQuestionChange} />
+                <FullEditor
+                    content={question.content}
+                    onEditorChange={handleContentQuestionChange}
+                    placeholder="Nhập câu hỏi ..."
+                />
             ) : (
                 <ReadOnlyEditor content={question.content} />
+            )}
+
+            {editing ? (
+                questionEditing.hint ? (
+                    <details>
+                        <summary className="mt-2 font-semibold">
+                            <span className="mr-3">Gợi ý:</span>
+                            <button
+                                className="my-2 rounded border px-3 py-0.5 font-semibold text-red-500 hover:border-red-500"
+                                onClick={handleDeleteHint}
+                            >
+                                Xoá gợi ý
+                            </button>
+                        </summary>
+                        <FullEditor
+                            content={question.hint}
+                            onEditorChange={handleHintChange}
+                            placeholder="Nhập gợi ý ..."
+                        />
+                    </details>
+                ) : (
+                    <div className="my-2">
+                        <button
+                            className="my-2 rounded border px-3 py-0.5 font-semibold text-primary hover:border-primary"
+                            onClick={handleAddHint}
+                        >
+                            Thêm gợi ý
+                        </button>
+                    </div>
+                )
+            ) : (
+                questionEditing.hint && (
+                    <details>
+                        <summary className="mt-2 font-semibold">Gợi ý:</summary>
+                        <ReadOnlyEditor content={question.hint} />
+                    </details>
+                )
+            )}
+
+            {editing ? (
+                questionEditing.explaination ? (
+                    <details>
+                        <summary className="mt-2 font-semibold">
+                            <span className="mr-3">Giải thích:</span>
+                            <button
+                                className="my-2 rounded border px-3 py-0.5 font-semibold text-red-500 hover:border-red-500"
+                                onClick={handleDeleteExplaination}
+                            >
+                                Xoá giải thích
+                            </button>
+                        </summary>
+                        <FullEditor
+                            content={question.explaination}
+                            onEditorChange={handleExplainationChange}
+                            placeholder="Nhập giải thích ..."
+                        />
+                    </details>
+                ) : (
+                    <div className="my-2">
+                        <button
+                            className="rounded border px-3 py-0.5 font-semibold text-primary hover:border-primary"
+                            onClick={handleAddExplaination}
+                        >
+                            Thêm giải thích
+                        </button>
+                    </div>
+                )
+            ) : (
+                questionEditing.explaination && (
+                    <details>
+                        <summary className="mt-2 font-semibold">Giải thích:</summary>
+                        <ReadOnlyEditor content={question.explaination} />
+                    </details>
+                )
             )}
 
             <div className="mt-2 font-semibold">Câu trả lời</div>

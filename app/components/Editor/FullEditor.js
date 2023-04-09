@@ -18,8 +18,8 @@ import MathPlugin from './plugins/MathPlugin';
 import { MathNode } from './nodes/MathNode';
 import QuestionToolbarPlugin from './plugins/QuestionToolbarPlugin';
 
-function Placeholder() {
-    return <div className="editor-placeholder">Nội dung câu hỏi ...</div>;
+function Placeholder({ placeholder }) {
+    return <div className="editor-placeholder">{placeholder}</div>;
 }
 
 const editorConfig = {
@@ -33,7 +33,7 @@ const editorConfig = {
     nodes: [ListNode, ListItemNode, CodeNode, CodeHighlightNode, ImageNode, MathNode],
 };
 
-export default function QuestionEditor({ content, onEditorChange }) {
+export default function FullEditor({ content, onEditorChange, placeholder }) {
     return (
         <LexicalComposer initialConfig={{ ...editorConfig, editorState: content }}>
             <div className="rounded-lg border">
@@ -43,7 +43,7 @@ export default function QuestionEditor({ content, onEditorChange }) {
                         contentEditable={
                             <ContentEditable className="editor-input min-h-[100px] border-t py-2 px-3 focus:outline-none" />
                         }
-                        placeholder={<Placeholder />}
+                        placeholder={<Placeholder placeholder={placeholder} />}
                         ErrorBoundary={LexicalErrorBoundary}
                     />
                     <OnChangePlugin
