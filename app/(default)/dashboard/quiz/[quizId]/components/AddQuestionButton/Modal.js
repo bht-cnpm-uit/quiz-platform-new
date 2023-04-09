@@ -23,6 +23,7 @@ export default function Modal({ setIsOpen }) {
         setLoading(false);
         if (newQuestionDocRef) {
             createSuccessNotify();
+            setIsOpen(false);
         } else {
             errorNotify();
         }
@@ -67,44 +68,52 @@ export default function Modal({ setIsOpen }) {
     }
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50">
+        <div
+            className="fixed inset-0 flex items-center justify-center bg-black/50 py-10"
+            onClick={() => setIsOpen(false)}
+        >
             <div
-                className={clsx('my-4 w-[700px] rounded-md border bg-white p-4', {
+                className={clsx('my-4 max-h-full w-[700px] overflow-y-auto rounded-md border bg-white p-4', {
                     'pointer-events-none opacity-50': loading,
                 })}
+                onClick={(e) => e.stopPropagation()}
             >
-                <button
-                    className="rounded bg-primary py-1 px-5 text-white hover:bg-primary-dark"
-                    onClick={() => handleCreateQuestion()}
-                >
-                    Tạo câu hỏi
-                </button>
-                <button
-                    className="rounded bg-red-500 py-1 px-5 text-white hover:bg-red-600"
-                    onClick={() => setIsOpen(false)}
-                >
-                    Đóng
-                </button>
-                <QuestionEditor content={question.content} onEditorChange={handleContentQuestionChange} />
-
-                <div className="mt-2 font-semibold">Câu trả lời</div>
-                <div>
-                    {question.answers.map((answer, index) => (
-                        <Answer
-                            key={answer.id}
-                            content={answer.content}
-                            isCorrectAnswer={answer.id === question.correctAnswer}
-                            onEditorChange={(editorState) => handleAnswerChange(index, editorState)}
-                            onDelete={() => handleAnswerDelete(index)}
-                            onCorrectAnswerChange={() => handleCorrectAnswerChange(answer.id)}
-                        />
-                    ))}
+                <div className="flex space-x-3 pb-3">
                     <button
-                        className="w-full rounded border py-2 px-5 font-medium text-primary hover:border-gray-700"
-                        onClick={handleAddAnswer}
+                        className="rounded bg-primary py-1 px-5 text-white hover:bg-primary-dark"
+                        onClick={() => handleCreateQuestion()}
                     >
-                        Thêm câu trả lời
+                        Tạo câu hỏi
                     </button>
+                    <button
+                        className="rounded bg-red-500 py-1 px-5 text-white hover:bg-red-600"
+                        onClick={() => setIsOpen(false)}
+                    >
+                        Đóng
+                    </button>
+                </div>
+                <div className="">
+                    <QuestionEditor content={question.content} onEditorChange={handleContentQuestionChange} />
+
+                    <div className="mt-2 font-semibold">Câu trả lời</div>
+                    <div>
+                        {question.answers.map((answer, index) => (
+                            <Answer
+                                key={answer.id}
+                                content={answer.content}
+                                isCorrectAnswer={answer.id === question.correctAnswer}
+                                onEditorChange={(editorState) => handleAnswerChange(index, editorState)}
+                                onDelete={() => handleAnswerDelete(index)}
+                                onCorrectAnswerChange={() => handleCorrectAnswerChange(answer.id)}
+                            />
+                        ))}
+                        <button
+                            className="w-full rounded border py-2 px-5 font-medium text-primary hover:border-gray-700"
+                            onClick={handleAddAnswer}
+                        >
+                            Thêm câu trả lời
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
