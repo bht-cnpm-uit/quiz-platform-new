@@ -9,10 +9,9 @@ import { CodeHighlightNode, CodeNode } from '@lexical/code';
 import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import CodeHighlightPlugin from '~/app/components/Editor/plugins/CodeHighlightPlugin';
 import MathPlugin from '~/app/components/Editor/plugins/MathPlugin';
-import { MathNode } from '~/app/components/Editor/nodes/MathNode';
 import exampleTheme from '~/configs/editorThemes/Theme';
 import { ImageNodeReadOnly } from '~/app/components/Editor/nodes/ImageNodeReadOnly';
-import ParseStatePlugin from '~/app/components/Editor/plugins/ParseStatePlugin';
+import { MathNodeReadOnly } from './nodes/MathNodeReadOnly';
 
 const editorConfig = {
     // The editor theme
@@ -23,7 +22,7 @@ const editorConfig = {
     },
     editable: false,
     // Any custom nodes go here
-    nodes: [ListNode, ListItemNode, CodeNode, CodeHighlightNode, MathNode, ImageNodeReadOnly],
+    nodes: [ListNode, ListItemNode, CodeNode, CodeHighlightNode, MathNodeReadOnly, ImageNodeReadOnly],
 };
 
 export default function ReadOnlyEditor({ content, className }) {
@@ -35,7 +34,6 @@ export default function ReadOnlyEditor({ content, className }) {
             />
             <CodeHighlightPlugin />
             <ListPlugin />
-            <MathPlugin />
             {/* <ParseStatePlugin content={content} /> */}
         </LexicalComposer>
     );

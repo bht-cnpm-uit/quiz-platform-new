@@ -3,25 +3,20 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';
-import { autoUpdate, inline, offset, shift, useFloating } from '@floating-ui/react';
+import { autoUpdate, offset, shift, useFloating } from '@floating-ui/react';
 
 import {
-    $createNodeSelection,
-    $createRangeSelection,
     $getNodeByKey,
     $getSelection,
     $isNodeSelection,
-    $setSelection,
     CLICK_COMMAND,
-    COMMAND_PRIORITY_EDITOR,
-    COMMAND_PRIORITY_HIGH,
     COMMAND_PRIORITY_LOW,
-    createCommand,
     DecoratorNode,
     KEY_BACKSPACE_COMMAND,
     KEY_DELETE_COMMAND,
 } from 'lexical';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import 'katex/dist/katex.min.css';
 import clsx from 'clsx';
 import { InlineMath } from 'react-katex';
 

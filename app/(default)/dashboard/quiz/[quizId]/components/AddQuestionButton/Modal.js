@@ -69,7 +69,7 @@ export default function Modal({ setIsOpen }) {
 
     return (
         <div
-            className="fixed inset-0 flex items-center justify-center bg-black/50 py-10"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 py-10"
             onClick={() => setIsOpen(false)}
         >
             <div

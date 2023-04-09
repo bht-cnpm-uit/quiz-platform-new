@@ -16,7 +16,6 @@ import ImagesPlugin from './plugins/ImagePlugin';
 import { ImageNode } from './nodes/ImageNode';
 import MathPlugin from './plugins/MathPlugin';
 import { MathNode } from './nodes/MathNode';
-import { forwardRef, useImperativeHandle, useRef } from 'react';
 import QuestionToolbarPlugin from './plugins/QuestionToolbarPlugin';
 
 function Placeholder() {
@@ -47,7 +46,12 @@ export default function QuestionEditor({ content, onEditorChange }) {
                         placeholder={<Placeholder />}
                         ErrorBoundary={LexicalErrorBoundary}
                     />
-                    <OnChangePlugin onChange={(editorState) => onEditorChange && onEditorChange(editorState)} />
+                    <OnChangePlugin
+                        onChange={(editorState) => {
+                            onEditorChange && onEditorChange(editorState);
+                            console.log(editorState);
+                        }}
+                    />
                     <HistoryPlugin />
                     <CodeHighlightPlugin />
                     <ListPlugin />
