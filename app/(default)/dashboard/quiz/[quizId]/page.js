@@ -1,10 +1,93 @@
 'use client';
 
 import { db } from '~/configs/firebase';
-import { collection, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, onSnapshot, updateDoc } from 'firebase/firestore';
 import QuestionCard from './components/QuestionCard';
 import AddQuestionButton from './components/AddQuestionButton/AddQuestionButton';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+function NameQuizEditor({ name, quizId }) {
+    const [editing, setEditing] = useState(false);
+    const [nameInput, setNameInput] = useState(name);
+    useEffect(() => {
+        setNameInput(name);
+    }, [name]);
+    const [loading, setLoading] = useState(false);
+    const updateSuccessNotify = () => toast.success('Cập nhật tên câu hỏi thành công!');
+    const errorNotify = () => toast.error('Có lỗi xảy ra!');
+    function handleSubmit() {
+        const questionDocRef = doc(db, 'quizzes', quizId);
+        setLoading(true);
+        updateDoc(questionDocRef, { name: nameInput })
+            .then(() => {
+                updateSuccessNotify();
+            })
+            .catch((error) => {
+                errorNotify();
+                console.log(error);
+            })
+            .finally(() => {
+                setEditing(false);
+                setLoading(false);
+            });
+        setEditing(false);
+    }
+    return editing ? (
+        <div className="flex items-center">
+            <input
+                type="text"
+                className="flex-1 rounded border py-2 px-4"
+                value={nameInput ?? ''}
+                onChange={(e) => setNameInput(e.target.value)}
+            />
+            <button className="ml-2 rounded border p-2 hover:text-gray-500" onClick={handleSubmit}>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="h-6 w-6"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+            </button>
+            <button className="ml-2 rounded border p-2 hover:text-gray-500" onClick={() => setEditing(false)}>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="h-6 w-6"
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    ) : (
+        <div className="flex items-center">
+            <div className="text-xl font-bold">{name}</div>
+            <button className="ml-2 hover:text-gray-500" onClick={() => setEditing(true)}>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="h-6 w-6"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                    />
+                </svg>
+            </button>
+        </div>
+    );
+}
 
 export default function EditQuiz() {
     const [quiz, setQuiz] = useState({});
@@ -33,7 +116,9 @@ export default function EditQuiz() {
 
     return (
         <div className="mx-auto w-[700px] py-10">
-            <h1>{quiz.name}</h1>
+            <div className="rounded-lg bg-white p-3">
+                <NameQuizEditor name={quiz.name} quizId={quiz.id} />
+            </div>
             {questions?.map((question) => (
                 <QuestionCard question={question} quizId={quiz.id} key={question.id} />
             ))}
