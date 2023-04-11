@@ -99,7 +99,6 @@ function MathComponent({ latex, isInline, nodeKey }) {
     const ref = useRef(null);
 
     function changeNode({ latex, isInline }) {
-        console.log({ latex, isInline });
         editor.update(() => {
             const mathNode = $getNodeByKey(nodeKey);
             if ($isMathNode(mathNode)) {
@@ -196,7 +195,7 @@ export class MathNode extends DecoratorNode {
     }
 
     static clone(node) {
-        return new MathNode(node.__latex, node.__key);
+        return new MathNode(node.__latex, node.__isInline);
     }
 
     static importJSON(serializedNode) {

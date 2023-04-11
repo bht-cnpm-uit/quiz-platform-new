@@ -30,7 +30,7 @@ export class MathNodeReadOnly extends DecoratorNode {
     }
 
     static clone(node) {
-        return new MathNodeReadOnly(node.__latex, node.__key);
+        return new MathNodeReadOnly(node.__latex, node.__isInline);
     }
 
     static importJSON(serializedNode) {
