@@ -1,6 +1,6 @@
 'use client';
 import clsx from 'clsx';
-import { addDoc, collection, deleteDoc, doc, onSnapshot } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -16,7 +16,7 @@ function CreateQuizModal({ isOpen, setIsOpen }) {
         try {
             const quizzesCollectionRef = collection(db, 'quizzes');
             setLoading(true);
-            const newQuizDocRef = await addDoc(quizzesCollectionRef, { name });
+            const newQuizDocRef = await addDoc(quizzesCollectionRef, { name, createdAt: serverTimestamp() });
             setLoading(false);
             if (newQuizDocRef) {
                 createSuccessNotify();
@@ -120,8 +120,8 @@ export default function QuizList() {
     const [quizzes, setQuizzes] = useState([]);
     const [isOpenModal, setIsOpenModal] = useState(false);
     useEffect(() => {
-        const quizzesRef = collection(db, 'quizzes');
-        const unsubscribeQuizzes = onSnapshot(quizzesRef, (snapshot) => {
+        const quizzesQuery = query(collection(db, 'quizzes'), orderBy('createdAt'));
+        const unsubscribeQuizzes = onSnapshot(quizzesQuery, (snapshot) => {
             const quizzesDocSnaps = snapshot.docs;
 
             const quizzes = quizzesDocSnaps.map((docSnap) => {
