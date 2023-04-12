@@ -34,7 +34,7 @@ function NameQuizEditor({ name, quizId }) {
         setEditing(false);
     }
     return editing ? (
-        <div className="flex items-center">
+        <div className="flex w-[500px] items-center">
             <input
                 type="text"
                 className="flex-1 rounded border py-2 px-4"
@@ -68,7 +68,7 @@ function NameQuizEditor({ name, quizId }) {
         </div>
     ) : (
         <div className="flex items-center">
-            <div className="text-xl font-bold">{name}</div>
+            <div className="text-lg font-bold">{name}</div>
             <button className="ml-2 hover:text-gray-500" onClick={() => setEditing(true)}>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -116,13 +116,22 @@ export default function EditQuiz() {
 
     return (
         <div className="mx-auto w-[700px] py-10">
-            <div className="rounded-lg bg-white p-3">
+            <div className="fixed top-0 right-0 left-w-sidebar z-[100] flex h-16 items-center justify-between bg-white px-4">
                 <NameQuizEditor name={quiz.name} quizId={quiz.id} />
+                <AddQuestionButton className="rounded bg-primary px-4 py-2 font-semibold text-white hover:bg-primary-dark" />
             </div>
-            {questions?.map((question) => (
-                <QuestionCard question={question} quizId={quiz.id} key={question.id} />
-            ))}
-            <AddQuestionButton />
+            <div className="mt-16">
+                {questions?.map((question, index) => (
+                    <div className="relative" key={question.id}>
+                        <QuestionCard question={question} quizId={quiz.id} />
+                        <div className="absolute top-0 -left-9 flex h-8 w-9 items-center justify-center rounded border bg-white text-lg font-semibold">
+                            {index + 1}
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <AddQuestionButton className="w-full rounded border py-2 px-5 font-medium text-primary hover:border-gray-700" />
         </div>
     );
 }

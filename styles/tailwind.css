@@ -49,7 +49,7 @@
 
     .editor-code:before {
         content: attr(data-gutter);
-        @apply absolute left-0 top-0 min-w-[24px] whitespace-pre-wrap border-r bg-gray-100 p-2 text-right text-gray-600;
+        @apply absolute left-0 top-0 min-w-[24px] whitespace-pre-wrap border-r bg-gray-50 p-2 text-right text-gray-600;
     }
     .editor-code:after {
         content: attr(data-highlight-language);
