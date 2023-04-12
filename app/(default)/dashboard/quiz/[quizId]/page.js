@@ -89,11 +89,11 @@ function NameQuizEditor({ name, quizId }) {
     );
 }
 
-export default function EditQuiz() {
+export default function EditQuiz({ params }) {
     const [quiz, setQuiz] = useState({});
     const [questions, setQuestions] = useState([]);
     useEffect(() => {
-        const quizRef = doc(db, 'quizzes', '2N1o0E3jxeH3v8trhYPj');
+        const quizRef = doc(db, 'quizzes', params.quizId);
         const unsubscribeQuiz = onSnapshot(quizRef, (snapshot) => {
             setQuiz({ id: snapshot.id, ...snapshot.data() });
         });
@@ -118,9 +118,15 @@ export default function EditQuiz() {
         <div className="mx-auto w-[700px] py-10">
             <div className="fixed top-0 right-0 left-w-sidebar z-[100] flex h-16 items-center justify-between bg-white px-4">
                 <NameQuizEditor name={quiz.name} quizId={quiz.id} />
-                <AddQuestionButton className="rounded bg-primary px-4 py-2 font-semibold text-white hover:bg-primary-dark" />
+                <AddQuestionButton
+                    quizId={quiz.id}
+                    className="rounded bg-primary px-4 py-2 font-semibold text-white hover:bg-primary-dark"
+                />
             </div>
             <div className="mt-16">
+                {questions.length === 0 && (
+                    <div className="my-10 text-center text-xl font-semibold">Chưa có câu hỏi nào!</div>
+                )}
                 {questions?.map((question, index) => (
                     <div className="relative" key={question.id}>
                         <QuestionCard question={question} quizId={quiz.id} />
@@ -131,7 +137,10 @@ export default function EditQuiz() {
                 ))}
             </div>
 
-            <AddQuestionButton className="w-full rounded border py-2 px-5 font-medium text-primary hover:border-gray-700" />
+            <AddQuestionButton
+                quizId={quiz.id}
+                className="w-full rounded border py-2 px-5 font-medium text-primary hover:border-gray-700"
+            />
         </div>
     );
 }

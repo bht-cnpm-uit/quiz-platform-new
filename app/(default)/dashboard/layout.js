@@ -3,7 +3,7 @@ import Sidebar from './components/Sidebar';
 
 export default function Layout({ children }) {
     return (
-        <div className="bg-gray-100">
+        <div className="min-h-screen bg-gray-100">
             <Sidebar />
             <div className="pl-w-sidebar">{children}</div>
             <ToastContainerClient autoClose={4000} />
