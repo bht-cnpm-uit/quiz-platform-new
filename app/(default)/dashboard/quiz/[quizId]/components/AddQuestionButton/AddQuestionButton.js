@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Modal from './Modal';
 import clsx from 'clsx';
 
-export default function AddQuestionButton({ quizId, ...props }) {
+export default function AddQuestionButton({ quizId, questions, ...props }) {
     const [isOpenModal, setIsOpenModal] = useState(false);
 
     return (
@@ -12,7 +12,7 @@ export default function AddQuestionButton({ quizId, ...props }) {
             <button {...props} onClick={() => setIsOpenModal(!isOpenModal)}>
                 Tạo câu hỏi
             </button>
-            {isOpenModal && <Modal quizId={quizId} setIsOpen={setIsOpenModal} />}
+            {isOpenModal && <Modal quizId={quizId} questions={questions} setIsOpen={setIsOpenModal} />}
         </>
     );
 }

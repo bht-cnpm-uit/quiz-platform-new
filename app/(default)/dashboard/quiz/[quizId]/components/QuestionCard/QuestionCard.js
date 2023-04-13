@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { db } from '~/configs/firebase';
-import { deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, orderBy, query, runTransaction, updateDoc } from 'firebase/firestore';
 import FullEditor from '~/app/components/Editor/FullEditor';
 import ReadOnlyEditor from '~/app/components/Editor/ReadOnlyEditor';
 import AnswerCard from './AnswerCard';
@@ -9,8 +9,9 @@ import clsx from 'clsx';
 import { nanoid } from 'nanoid';
 import { toast } from 'react-toastify';
 
-export default function QuestionCard({ quizId, question, editingInDefault = false }) {
+export default function QuestionCard({ quizId, question, editingInDefault = false, questions }) {
     const updateSuccessNotify = () => toast.success('Cập nhật câu hỏi thành công!');
+    const updatePositionSuccessNotify = () => toast.success('Cập nhật vị trí câu hỏi thành công!');
     const deleteSuccessNotify = () => toast.success('Xoá câu hỏi thành công!');
     const errorNotify = () => toast.error('Có lỗi xảy ra!');
     const [editing, setEditing] = useState(editingInDefault);
@@ -59,6 +60,54 @@ export default function QuestionCard({ quizId, question, editingInDefault = fals
     function handleCancelQuestionChange() {
         setQuestionEditing(question);
         setEditing(false);
+    }
+
+    async function handleMoveQuestion() {
+        try {
+            let indexToMove = prompt('Di chuyển đến sau câu hỏi số:', '');
+            if (!indexToMove) {
+                return;
+            }
+            indexToMove = Number(indexToMove);
+            setLoading(true);
+
+            if (!Number.isInteger(indexToMove)) {
+                throw 'Vị trí di chuyển đến phải là số!';
+            }
+
+            if (indexToMove < 0) {
+                throw 'Vị trí di chuyển phải từ 0!';
+            }
+
+            const questionDocRef = doc(db, 'quizzes', quizId, 'questions', question.id);
+
+            if (indexToMove > questions.length) {
+                indexToMove = questions.length;
+            }
+
+            // get question before and after
+            const questionBefore = questions[indexToMove - 1];
+            const questionAfter = questions[indexToMove];
+
+            if (question.id === questionBefore?.id || question.id === questionAfter?.id) {
+                throw 'Vị trí di chuyển trùng với vị trí ban đầu';
+            }
+
+            // move to start
+            if (indexToMove === 0) {
+                updateDoc(questionDocRef, { index: questionAfter.index / 2 });
+            } else if (indexToMove === questions.length) {
+                updateDoc(questionDocRef, { index: questionAfter.index + 1024 });
+            } else {
+                updateDoc(questionDocRef, { index: (questionBefore.index + questionAfter.index) / 2 });
+            }
+            updatePositionSuccessNotify();
+        } catch (error) {
+            errorNotify();
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     // Hint handler
@@ -143,20 +192,28 @@ export default function QuestionCard({ quizId, question, editingInDefault = fals
         >
             <div className="mb-3 flex space-x-2 border-b pb-3">
                 {!editing && (
-                    <>
-                        <button
-                            className="rounded bg-primary py-1 px-5 text-white hover:bg-primary-dark"
-                            onClick={() => setEditing(!editing)}
-                        >
-                            Sửa
-                        </button>
+                    <div className="flex w-full justify-between">
+                        <div className="flex space-x-2">
+                            <button
+                                className="rounded bg-primary py-1 px-5 text-white hover:bg-primary-dark"
+                                onClick={() => setEditing(!editing)}
+                            >
+                                Sửa
+                            </button>
+                            <button
+                                className="rounded bg-blue-500 py-1 px-5 text-white hover:bg-blue-600"
+                                onClick={handleMoveQuestion}
+                            >
+                                Di chuyển
+                            </button>
+                        </div>
                         <button
                             className="rounded bg-red-500 py-1 px-5 text-white hover:bg-red-600"
-                            onClick={() => handleDeleteQuestion()}
+                            onClick={handleDeleteQuestion}
                         >
                             Xoá
                         </button>
-                    </>
+                    </div>
                 )}
                 {editing && (
                     <>

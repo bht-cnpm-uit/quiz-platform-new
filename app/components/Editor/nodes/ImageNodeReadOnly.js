@@ -48,7 +48,7 @@ export class ImageNodeReadOnly extends DecoratorNode {
     decorate() {
         return (
             <Suspense fallback={null}>
-                <img src={this.__src} nodeKey={this.__key} />
+                <img src={this.__src} />
             </Suspense>
         );
     }

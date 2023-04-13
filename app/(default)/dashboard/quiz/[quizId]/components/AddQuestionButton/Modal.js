@@ -10,7 +10,7 @@ import FullEditor from '~/app/components/Editor/FullEditor';
 import { nanoid } from 'nanoid';
 import { addDoc, collection } from 'firebase/firestore';
 
-export default function Modal({ quizId, setIsOpen }) {
+export default function Modal({ quizId, setIsOpen, questions }) {
     const [question, setQuestion] = useState(structuredClone(placeholderQuestion));
     const [loading, setLoading] = useState(false);
     const createSuccessNotify = () => toast.success('Tạo câu hỏi thành công!');
@@ -19,7 +19,8 @@ export default function Modal({ quizId, setIsOpen }) {
     async function handleCreateQuestion() {
         const questionsCollectionRef = collection(db, 'quizzes', quizId, 'questions');
         setLoading(true);
-        const newQuestionDocRef = await addDoc(questionsCollectionRef, question);
+        const newIndex = (questions[questions.length - 1]?.index ?? 0) + 1024;
+        const newQuestionDocRef = await addDoc(questionsCollectionRef, { ...question, index: newIndex });
         setLoading(false);
         if (newQuestionDocRef) {
             createSuccessNotify();

@@ -1,5 +1,5 @@
 import { db } from '~/configs/firebase';
-import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, orderBy, query } from 'firebase/firestore';
 import Page from '../components/Page';
 
 async function getData(quizId) {
@@ -10,8 +10,8 @@ async function getData(quizId) {
         if (!quizDocSnap.exists) {
             throw new Error('Quiz not exists');
         }
-        const questionsRef = collection(quizRef, 'questions');
-        const questionsSnap = await getDocs(questionsRef);
+        const questionsQuery = query(collection(quizRef, 'questions'), orderBy('index'));
+        const questionsSnap = await getDocs(questionsQuery);
         const questionsDocSnaps = questionsSnap.docs;
 
         const questions = questionsDocSnaps.map((docSnap) => {

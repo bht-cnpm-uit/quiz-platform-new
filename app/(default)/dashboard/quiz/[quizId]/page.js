@@ -1,7 +1,7 @@
 'use client';
 
 import { db } from '~/configs/firebase';
-import { collection, doc, getDoc, getDocs, onSnapshot, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
 import QuestionCard from './components/QuestionCard';
 import AddQuestionButton from './components/AddQuestionButton/AddQuestionButton';
 import { useEffect, useState } from 'react';
@@ -98,8 +98,8 @@ export default function EditQuiz({ params }) {
             setQuiz({ id: snapshot.id, ...snapshot.data() });
         });
 
-        const questionsRef = collection(quizRef, 'questions');
-        const unsubscribeQuestions = onSnapshot(questionsRef, (snapshot) => {
+        const questionsQuery = query(collection(quizRef, 'questions'), orderBy('index'));
+        const unsubscribeQuestions = onSnapshot(questionsQuery, (snapshot) => {
             const questionsDocSnaps = snapshot.docs;
 
             const questions = questionsDocSnaps.map((docSnap) => {
@@ -121,6 +121,7 @@ export default function EditQuiz({ params }) {
                 <AddQuestionButton
                     quizId={quiz.id}
                     className="rounded bg-primary px-4 py-2 font-semibold text-white hover:bg-primary-dark"
+                    questions={questions}
                 />
             </div>
             <div className="mt-16">
@@ -129,7 +130,7 @@ export default function EditQuiz({ params }) {
                 )}
                 {questions?.map((question, index) => (
                     <div className="relative" key={question.id}>
-                        <QuestionCard question={question} quizId={quiz.id} />
+                        <QuestionCard question={question} quizId={quiz.id} questions={questions} />
                         <div className="absolute top-0 -left-9 flex h-8 w-9 items-center justify-center rounded border bg-white text-lg font-semibold">
                             {index + 1}
                         </div>
@@ -140,6 +141,7 @@ export default function EditQuiz({ params }) {
             <AddQuestionButton
                 quizId={quiz.id}
                 className="w-full rounded border py-2 px-5 font-medium text-primary hover:border-gray-700"
+                questions={questions}
             />
         </div>
     );
