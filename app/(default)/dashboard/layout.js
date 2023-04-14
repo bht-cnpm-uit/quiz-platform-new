@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { userActions } from '~/redux/slices/userSlice';
 import { auth, db } from '~/configs/firebase';
 import { userSelector } from '~/redux/selectors/userSelector';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 
 function IsPermissionLayout({ children }) {
     const currentUser = useSelector(userSelector);
@@ -123,6 +123,7 @@ export default function Layout({ children }) {
                 avatar: user.photoURL,
                 name: user.displayName,
                 email: user.email,
+                createdAt: serverTimestamp(),
             });
             userSnapshot = await getDoc(userDocRef);
             if (userSnapshot.exists()) {
