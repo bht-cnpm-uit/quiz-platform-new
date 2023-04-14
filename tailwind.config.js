@@ -10,7 +10,7 @@ module.exports = {
         extend: {
             spacing: {
                 'h-header': 'var(--h-header)',
-                'w-sidebar': '224px',
+                'w-sidebar': '250px',
             },
             maxWidth: {
                 container: '1200px',

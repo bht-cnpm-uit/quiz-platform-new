@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import quizReducer from './slices/quizSlice';
+import userReducer from './slices/userSlice';
 
 const localStorageMiddleware = (store) => (next) => (action) => {
     const result = next(action);
@@ -24,6 +25,7 @@ const reHydrateStore = () => {
 
 const store = configureStore({
     reducer: { quiz: quizReducer },
+    reducer: { user: userReducer },
     // preloadedState: reHydrateStore(),
     // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(localStorageMiddleware),
 });
