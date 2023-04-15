@@ -4,7 +4,7 @@ export default function Layout({ children }) {
     return (
         <>
             {children}
-            <ClientToastContainer autoClose={4000} />
+            <ClientToastContainer autoClose={4000} position="bottom-left" theme="colored" />
         </>
     );
 }

@@ -103,4 +103,12 @@
     .debug-timetravel-panel-button {
         @apply flex-1 hover:underline;
     }
+
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: #ddd;
+        border-radius: 5px;
+    }
 }

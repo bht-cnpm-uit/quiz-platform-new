@@ -56,7 +56,7 @@ export default function Page({ quizRaw }) {
                 <AnimatePresence mode="wait">
                     <motion.main exit={{ opacity: 0 }} className="flex h-screen pt-14">
                         {/* Main quiz */}
-                        <div className="h-full flex-1 bg-gray-100 pb-6" style={{ overflowY: 'overlay' }}>
+                        <div className="h-full flex-1 bg-gray-100 px-4 pb-6" style={{ overflowY: 'overlay' }}>
                             <Question questionIndex={questionIndex || 0} />
                         </div>
 
