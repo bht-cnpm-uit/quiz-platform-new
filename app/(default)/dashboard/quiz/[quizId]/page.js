@@ -1,7 +1,7 @@
 'use client';
 
 import { db } from '~/configs/firebase';
-import { collection, doc, getDoc, getDocs, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
 import QuestionCard from './components/QuestionCard';
 import AddQuestionButton from './components/AddQuestionButton/AddQuestionButton';
 import { useEffect, useState } from 'react';
@@ -114,15 +114,29 @@ export default function EditQuiz({ params }) {
         };
     }, []);
 
+    function handlePreviewClick() {
+        const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : '';
+        const URL = `${origin}/live/${quiz.id}`;
+        window?.open(URL);
+    }
+
     return (
         <div className="mx-auto w-[700px] py-10">
             <div className="fixed top-0 right-0 left-w-sidebar z-[100] flex h-16 items-center justify-between bg-white px-4">
                 <NameQuizEditor name={quiz.name} quizId={quiz.id} />
-                <AddQuestionButton
-                    quizId={quiz.id}
-                    className="rounded bg-primary px-4 py-2 font-semibold text-white hover:bg-primary-dark"
-                    questions={questions}
-                />
+                <div className="flex items-center space-x-3">
+                    <button
+                        className="rounded bg-blue-500 px-4 py-2 font-semibold text-white hover:bg-blue-600"
+                        onClick={handlePreviewClick}
+                    >
+                        Xem trước
+                    </button>
+                    <AddQuestionButton
+                        quizId={quiz.id}
+                        className="rounded bg-primary px-4 py-2 font-semibold text-white hover:bg-primary-dark"
+                        questions={questions}
+                    />
+                </div>
             </div>
             <div className="mt-16">
                 {questions.length === 0 && (
