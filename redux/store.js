@@ -24,8 +24,7 @@ const reHydrateStore = () => {
 };
 
 const store = configureStore({
-    reducer: { quiz: quizReducer },
-    reducer: { user: userReducer },
+    reducer: { quiz: quizReducer, user: userReducer },
     // preloadedState: reHydrateStore(),
     // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(localStorageMiddleware),
 });
