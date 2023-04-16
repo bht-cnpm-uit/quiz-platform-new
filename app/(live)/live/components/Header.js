@@ -12,7 +12,7 @@ import QUIZ_STATE from '~/constants/quiz-state';
 import { quizSelector } from '~/redux/selectors';
 import { quizActions } from '~/redux/slices/quizSlice';
 
-export default function Header() {
+export default function Header({ setShowMobileSidebar }) {
     const quiz = useSelector(quizSelector);
     const dispatch = useDispatch();
     const [showComfirmComplete, setShowComfirmComplete] = useState(false);
@@ -43,7 +43,7 @@ export default function Header() {
 
     return quiz ? (
         <>
-            <div className="fixed right-0 left-0 z-[10] flex h-14 items-center justify-between border-b bg-gray-100 px-8">
+            <div className="fixed right-0 left-0 z-[10] flex h-14 items-center justify-between border-b bg-gray-100 px-8 md:px-4">
                 <div className="flex items-center">
                     <div className="mr-3 text-lg font-medium">{quiz.name}</div>
                     <div className="text-primary">
@@ -71,7 +71,7 @@ export default function Header() {
                     {quiz.state === QUIZ_STATE.PENDDING ? (
                         <button
                             className={clsx(
-                                'ml-3 flex h-9 items-center rounded-lg border bg-white px-4 text-sm font-medium uppercase text-primary hover:border-primary'
+                                'ml-3 flex h-9 items-center rounded-lg border bg-white px-4 text-sm font-medium uppercase text-primary hover:border-primary md:hidden'
                             )}
                             onClick={handleCompleteQuiz}
                         >
@@ -175,7 +175,7 @@ export default function Header() {
                         </>
                     )}
                 </div>
-                <div className="flex space-x-3">
+                <div className="flex space-x-3 md:hidden">
                     {quiz.state !== QUIZ_STATE.RESULT && (
                         <>
                             <motion.button
@@ -235,6 +235,24 @@ export default function Header() {
                         </>
                     )}
                 </div>
+
+                {/* SHOW MOBILE SIDEBAR BTN */}
+                <button className="hidden md:block" onClick={() => setShowMobileSidebar(true)}>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="h-6 w-6"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                        />
+                    </svg>
+                </button>
             </div>
             <Modal
                 warning

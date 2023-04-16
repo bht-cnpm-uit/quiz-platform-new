@@ -23,6 +23,16 @@ module.exports = {
                 'primary-dark': '#845bd8',
             },
         },
+        screens: {
+            xxl: { min: '1400px' },
+            xl: { max: '1399px' },
+            lg: { max: '1199px' },
+            md: { max: '991px' },
+            sm: { max: '767px' },
+            xs: { max: '575px' },
+            'can-hover': { raw: '(hover: hover)' },
+            'cannot-hover': { raw: '(hover: none)' },
+        },
     },
     plugins: [],
 };

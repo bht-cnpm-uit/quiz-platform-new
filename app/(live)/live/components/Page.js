@@ -13,6 +13,7 @@ import { quizActions } from '~/redux/slices/quizSlice';
 import Header from './Header';
 import Question from './Question';
 import Sidebar from './Sidebar';
+import MobileSidebar from './MoblieSidebar';
 
 // ANIM FOR RESULT
 const animGroup = {
@@ -36,6 +37,7 @@ export default function Page({ quizRaw }) {
     const dispatch = useDispatch();
     const [questionIndex] = useDebounce(quiz?.currentQuestion, 200);
     const [showSidebar, setShowSidebar] = useState(true);
+    const [showMobileSidebar, setShowMobileSidebar] = useState(false);
     const showCompletedQuiz = () => toast.success('Bạn đã hoàn thành tất cả câu hỏi!');
     const isQuizComplete = useMemo(() => quiz?.state !== QUIZ_STATE.PENDDING, [quiz?.state]);
 
@@ -51,7 +53,7 @@ export default function Page({ quizRaw }) {
 
     return quiz ? (
         <div className="w-full overflow-x-hidden">
-            <Header />
+            <Header setShowMobileSidebar={setShowMobileSidebar} />
             {quiz.state !== QUIZ_STATE.RESULT ? (
                 <AnimatePresence mode="wait">
                     <motion.main exit={{ opacity: 0 }} className="flex h-screen pt-14">
@@ -62,7 +64,7 @@ export default function Page({ quizRaw }) {
 
                         {/* SIZEBAR */}
                         <div
-                            className={clsx('relative transition-all duration-300', {
+                            className={clsx('relative transition-all duration-300 md:hidden', {
                                 'w-0': !showSidebar,
                                 'w-[352px]': showSidebar,
                             })}
@@ -100,6 +102,22 @@ export default function Page({ quizRaw }) {
                             </button>
                             {showSidebar && <Sidebar />}
                         </div>
+
+                        {/* MOBILE SIZEBAR */}
+                        <AnimatePresence>
+                            {showMobileSidebar && (
+                                <>
+                                    <motion.div
+                                        className="fixed inset-0 z-50 bg-black/50"
+                                        onClick={() => setShowMobileSidebar(false)}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                    />
+                                    <MobileSidebar setShowMobileSidebar={setShowMobileSidebar} />
+                                </>
+                            )}
+                        </AnimatePresence>
                     </motion.main>
                 </AnimatePresence>
             ) : (
