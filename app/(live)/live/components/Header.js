@@ -6,16 +6,14 @@ import { useState } from 'react';
 import { buildStyles, CircularProgressbarWithChildren } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { useDispatch, useSelector } from 'react-redux';
-import Modal from '~/app/components/Modal';
 import QUESTION_STATE from '~/constants/question-state';
 import QUIZ_STATE from '~/constants/quiz-state';
 import { quizSelector } from '~/redux/selectors';
 import { quizActions } from '~/redux/slices/quizSlice';
 
-export default function Header({ setShowMobileSidebar }) {
+export default function Header({ setShowMobileSidebar, setShowComfirmComplete }) {
     const quiz = useSelector(quizSelector);
     const dispatch = useDispatch();
-    const [showComfirmComplete, setShowComfirmComplete] = useState(false);
 
     function handleNextQuestion() {
         dispatch(quizActions.nextQuestion());
@@ -23,6 +21,14 @@ export default function Header({ setShowMobileSidebar }) {
     function handlePrevQuestion() {
         dispatch(quizActions.prevQuestion());
     }
+
+    function handleToggleResultAndReview() {
+        dispatch(quizActions.toggleResultAndReview());
+    }
+    function handleReset() {
+        dispatch(quizActions.reset());
+    }
+
     function handleCompleteQuiz() {
         const penddingQuestion = quiz.questions.reduce(
             (total, currQuestion) => (currQuestion.state === QUESTION_STATE.PENDDING ? total + 1 : total),
@@ -33,12 +39,6 @@ export default function Header({ setShowMobileSidebar }) {
         } else {
             dispatch(quizActions.complete());
         }
-    }
-    function handleToggleResultAndReview() {
-        dispatch(quizActions.toggleResultAndReview());
-    }
-    function handleReset() {
-        dispatch(quizActions.reset());
     }
 
     return quiz ? (
@@ -98,7 +98,7 @@ export default function Header({ setShowMobileSidebar }) {
                                 initial={{ opacity: 0, scale: 0.5 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 className={clsx(
-                                    'ml-3 flex h-9 items-center rounded-lg bg-primary px-4 text-sm font-medium uppercase text-white hover:bg-primary-dark'
+                                    'ml-3 flex h-9 items-center rounded-lg bg-primary px-4 text-sm font-medium uppercase text-white hover:bg-primary-dark md:hidden'
                                 )}
                                 onClick={handleToggleResultAndReview}
                             >
@@ -151,7 +151,7 @@ export default function Header({ setShowMobileSidebar }) {
                                 initial={{ opacity: 0, scale: 0.5 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 className={clsx(
-                                    'ml-3 flex h-9 items-center rounded-lg border border-primary px-4 text-sm font-medium uppercase text-primary hover:bg-primary/5'
+                                    'ml-3 flex h-9 items-center rounded-lg border border-primary px-4 text-sm font-medium uppercase text-primary hover:bg-primary/5 md:hidden'
                                 )}
                                 onClick={handleReset}
                             >
@@ -254,16 +254,6 @@ export default function Header({ setShowMobileSidebar }) {
                     </svg>
                 </button>
             </div>
-            <Modal
-                warning
-                title="Xác nhận kết thúc!"
-                description="Bạn chưa hoàn thành hết tất cả câu hỏi. Bạn có muốn kết thúc không?"
-                okButtonText="Kết thúc"
-                cancelButtonText="Huỷ"
-                open={showComfirmComplete}
-                setOpen={setShowComfirmComplete}
-                onOkButtonClick={() => dispatch(quizActions.complete())}
-            />
         </>
     ) : (
         <></>

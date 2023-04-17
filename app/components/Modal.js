@@ -49,7 +49,7 @@ function Modal({
 
     return (
         <Transition.Root show={open} as={Fragment}>
-            <Dialog as="div" className="relative z-10" initialFocus={okButtonRef} onClose={setOpen}>
+            <Dialog as="div" className="relative z-[1000]" initialFocus={okButtonRef} onClose={setOpen}>
                 <Transition.Child
                     as={Fragment}
                     enter="ease-out duration-300"
@@ -62,23 +62,23 @@ function Modal({
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
                 </Transition.Child>
 
-                <div className="fixed inset-0 z-10 overflow-y-auto">
-                    <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <div className="fixed inset-0 z-[1000] overflow-y-auto">
+                    <div className="flex min-h-full items-center justify-center p-0 text-center md:items-end md:p-4">
                         <Transition.Child
                             as={Fragment}
                             enter="ease-out duration-300"
-                            enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                            enterTo="opacity-100 translate-y-0 sm:scale-100"
+                            enterFrom="opacity-0 md:translate-y-4 translate-y-0"
+                            enterTo="opacity-100 translate-y-0"
                             leave="ease-in duration-200"
-                            leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                            leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                            leaveFrom="opacity-100 translate-y-0"
+                            leaveTo="opacity-0 md:translate-y-4 translate-y-0"
                         >
-                            <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                                    <div className="sm:flex sm:items-start">
+                            <Dialog.Panel className="relative max-w-lg transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all">
+                                <div className="bg-white p-6 pb-4 md:px-4 md:pt-5 md:pb-4">
+                                    <div className="flex items-start md:block">
                                         <div
                                             className={clsx(
-                                                'mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full  sm:mx-0 sm:h-10 sm:w-10',
+                                                'mx-0 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full  md:mx-auto md:h-12 md:w-12',
                                                 {
                                                     'bg-red-100': warning,
                                                 }
@@ -86,7 +86,7 @@ function Modal({
                                         >
                                             {icon}
                                         </div>
-                                        <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                        <div className="mt-0 ml-4 text-left md:mt-3 md:ml-0 md:text-center">
                                             <Dialog.Title
                                                 as="h3"
                                                 className="text-lg font-medium leading-6 text-gray-900"
@@ -99,11 +99,11 @@ function Modal({
                                         </div>
                                     </div>
                                 </div>
-                                <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                <div className="flex flex-row-reverse justify-start bg-gray-50 py-3 px-6 md:block md:px-4">
                                     <button
                                         type="button"
                                         className={clsx(
-                                            'inline-flex w-full justify-center rounded-md border border-transparent px-4 py-2 text-base font-medium text-white shadow-sm focus:outline-none focus:ring-2  focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm',
+                                            'ml-3 inline-flex min-w-[120px] justify-center rounded-md border border-transparent px-4 py-2 font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 md:ml-0  md:w-full',
                                             {
                                                 ' bg-red-600 hover:bg-red-700 focus:ring-red-500 ': warning,
                                             }
@@ -119,7 +119,7 @@ function Modal({
                                     {cancelButtonText && (
                                         <button
                                             type="button"
-                                            className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                                            className="inline-flex min-w-[120px] justify-center rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 md:mt-3 md:w-full"
                                             onClick={() => {
                                                 setOpen(false);
                                                 onCancelButtonClick && onCancelButtonClick();
