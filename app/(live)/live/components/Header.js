@@ -43,9 +43,11 @@ export default function Header({ setShowMobileSidebar, setShowComfirmComplete })
 
     return quiz ? (
         <>
-            <div className="fixed right-0 left-0 z-[10] flex h-14 items-center justify-between border-b bg-gray-100 px-8 md:px-4">
-                <div className="flex items-center">
-                    <div className="mr-3 text-lg font-medium">{quiz.name}</div>
+            <div className="max-w-screen fixed right-0 left-0 z-[10] flex h-14 items-center justify-between border-b bg-gray-100 px-8 md:px-4">
+                <div className="flex items-center overflow-hidden">
+                    <div className="mr-3 overflow-hidden text-ellipsis whitespace-nowrap text-lg font-medium">
+                        {quiz.name}
+                    </div>
                     <div className="text-primary">
                         <CircularProgressbarWithChildren
                             className="h-8 w-8"
@@ -71,7 +73,7 @@ export default function Header({ setShowMobileSidebar, setShowComfirmComplete })
                     {quiz.state === QUIZ_STATE.PENDDING ? (
                         <button
                             className={clsx(
-                                'ml-3 flex h-9 items-center rounded-lg border bg-white px-4 text-sm font-medium uppercase text-primary hover:border-primary md:hidden'
+                                'mx-3 flex h-9 flex-shrink-0 items-center rounded-lg border bg-white px-4 text-sm font-medium uppercase text-primary hover:border-primary md:hidden'
                             )}
                             onClick={handleCompleteQuiz}
                         >
@@ -98,7 +100,7 @@ export default function Header({ setShowMobileSidebar, setShowComfirmComplete })
                                 initial={{ opacity: 0, scale: 0.5 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 className={clsx(
-                                    'ml-3 flex h-9 items-center rounded-lg bg-primary px-4 text-sm font-medium uppercase text-white hover:bg-primary-dark md:hidden'
+                                    'ml-3 flex h-9 flex-shrink-0 items-center rounded-lg bg-primary px-4 text-sm font-medium uppercase text-white hover:bg-primary-dark md:hidden'
                                 )}
                                 onClick={handleToggleResultAndReview}
                             >
@@ -151,7 +153,7 @@ export default function Header({ setShowMobileSidebar, setShowComfirmComplete })
                                 initial={{ opacity: 0, scale: 0.5 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 className={clsx(
-                                    'ml-3 flex h-9 items-center rounded-lg border border-primary px-4 text-sm font-medium uppercase text-primary hover:bg-primary/5 md:hidden'
+                                    'ml-3 flex h-9 flex-shrink-0 items-center rounded-lg border border-primary px-4 text-sm font-medium uppercase text-primary hover:bg-primary/5 md:hidden'
                                 )}
                                 onClick={handleReset}
                             >
@@ -175,7 +177,7 @@ export default function Header({ setShowMobileSidebar, setShowComfirmComplete })
                         </>
                     )}
                 </div>
-                <div className="flex space-x-3 md:hidden">
+                <div className="flex flex-shrink-0 space-x-3 md:hidden">
                     {quiz.state !== QUIZ_STATE.RESULT && (
                         <>
                             <motion.button
@@ -237,7 +239,7 @@ export default function Header({ setShowMobileSidebar, setShowComfirmComplete })
                 </div>
 
                 {/* SHOW MOBILE SIDEBAR BTN */}
-                <button className="hidden md:block" onClick={() => setShowMobileSidebar(true)}>
+                <button className="ml-3 hidden md:block" onClick={() => setShowMobileSidebar(true)}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
