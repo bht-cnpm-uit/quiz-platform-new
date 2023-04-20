@@ -65,6 +65,12 @@ export default function Page({ quizRaw }) {
     function handleReset() {
         dispatch(quizActions.reset());
     }
+    function handleNextQuestion() {
+        dispatch(quizActions.nextQuestion());
+    }
+    function handlePrevQuestion() {
+        dispatch(quizActions.prevQuestion());
+    }
 
     return quiz ? (
         <>
@@ -88,11 +94,70 @@ export default function Page({ quizRaw }) {
                         </>
                     )}
                 </AnimatePresence>
+
+                {/* BOTTOM BAR MOBILE */}
+                {quiz.state !== QUIZ_STATE.RESULT && (
+                    <div className="fixed bottom-0 left-0 right-0 z-10 hidden h-14 items-center justify-center space-x-3 border-t bg-gray-100 md:flex">
+                        <motion.button
+                            initial={{ scale: 0.5 }}
+                            animate={{ scale: 1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className={clsx(
+                                'flex h-9 select-none items-center rounded-lg border border-primary px-4 text-sm font-medium uppercase text-primary hover:bg-primary/5',
+                                {
+                                    'pointer-events-none !opacity-50': quiz.currentQuestion === 0,
+                                }
+                            )}
+                            onClick={handlePrevQuestion}
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="h-5 w-5"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                            </svg>
+                            <p className="ml-1">Câu hỏi trước</p>
+                        </motion.button>
+
+                        <motion.button
+                            initial={{ scale: 0.5 }}
+                            animate={{ scale: 1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className={clsx(
+                                'flex h-9 select-none items-center rounded-lg bg-primary px-4 text-sm font-medium uppercase text-white hover:bg-primary-dark',
+                                {
+                                    'pointer-events-none !opacity-50':
+                                        quiz.currentQuestion === quiz.questions.length - 1,
+                                }
+                            )}
+                            onClick={handleNextQuestion}
+                        >
+                            <p className="mr-1">Câu hỏi sau</p>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="h-5 w-5"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </motion.button>
+                    </div>
+                )}
                 {quiz.state !== QUIZ_STATE.RESULT ? (
                     <AnimatePresence mode="wait">
                         <motion.main exit={{ opacity: 0 }} className="flex h-screen pt-14">
                             {/* Main quiz */}
-                            <div className="h-full flex-1 bg-gray-100 px-4 pb-6" style={{ overflowY: 'overlay' }}>
+                            <div
+                                className="h-full flex-1 bg-gray-100 px-4 pb-6 md:pb-16"
+                                style={{ overflowY: 'overlay' }}
+                            >
                                 <Question questionIndex={questionIndex || 0} />
                             </div>
 
