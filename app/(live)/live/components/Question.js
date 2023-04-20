@@ -229,7 +229,7 @@ export default function Question({ questionIndex }) {
                         transition={{ duration: 0.2, delay: 0.4, layout: { duration: 0.1 } }}
                         className="mt-4 flex items-center justify-between"
                     >
-                        <div>
+                        <div className="md:hidden">
                             {question?.state !== QUESTION_STATE.PENDDING && question?.explanation && (
                                 <button
                                     className="flex font-medium text-primary-dark hover:text-primary"
@@ -256,15 +256,15 @@ export default function Question({ questionIndex }) {
                                 </button>
                             )}
                         </div>
-                        <div>
+                        <>
                             {question.state === QUESTION_STATE.PENDDING && question?.chosenAnswer !== null && (
                                 <motion.button
                                     initial={{ opacity: 0, scale: 0.7 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    whileHover={{ scale: 1.05 }}
+                                    whileHover={{ scale: 1.03 }}
                                     whileTap={{ scale: 1 }}
                                     transition={{ delay: 0.1 }}
-                                    className="flex h-10 items-center rounded-lg bg-primary px-6 font-medium uppercase text-white hover:bg-primary-dark"
+                                    className="flex h-10 items-center justify-center rounded-lg bg-primary px-6 font-medium uppercase text-white hover:bg-primary-dark md:w-full"
                                     onClick={handleSubmitQuestion}
                                 >
                                     Trả lời
@@ -275,9 +275,9 @@ export default function Question({ questionIndex }) {
                                 <motion.button
                                     initial={{ opacity: 0, scale: 0.7 }}
                                     animate={{ opacity: 1, scale: 1 }}
-                                    whileHover={{ scale: 1.05 }}
+                                    whileHover={{ scale: 1.03 }}
                                     whileTap={{ scale: 1 }}
-                                    className="flex h-10 items-center rounded-lg bg-primary px-6 font-medium uppercase text-white hover:bg-primary-dark"
+                                    className="flex h-10 items-center justify-center rounded-lg bg-primary px-6 font-medium uppercase text-white hover:bg-primary-dark md:w-full"
                                     onClick={handleNextQuestion}
                                 >
                                     <p>Câu hỏi tiếp theo</p>
@@ -297,9 +297,42 @@ export default function Question({ questionIndex }) {
                                     </svg>
                                 </motion.button>
                             )}
-                        </div>
+                        </>
                     </motion.div>
 
+                    {/* MOBILE EXPLANT TOGGLE */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.2, delay: 0.4 }}
+                        className="mt-3 hidden md:block"
+                    >
+                        {question?.state !== QUESTION_STATE.PENDDING && question?.explanation && (
+                            <button
+                                className="flex font-medium text-primary-dark hover:text-primary"
+                                onClick={handleToggleExplanation}
+                            >
+                                <div className="mr-2">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="h-6 w-6"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
+                                        />
+                                    </svg>
+                                </div>
+
+                                <p>{question?.showExplanation ? 'Ẩn giải thích' : 'Xem giải thích'}</p>
+                            </button>
+                        )}
+                    </motion.div>
                     <motion.div
                         layout
                         initial={{ opacity: 0 }}
