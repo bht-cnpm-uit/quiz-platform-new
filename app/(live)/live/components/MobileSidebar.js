@@ -32,6 +32,7 @@ export default function MobileSidebar({ setShowMobileSidebar, setShowComfirmComp
 
     function handleGotoQuestion(index) {
         dispatch(quizActions.gotoQuestion(index));
+        setShowMobileSidebar(false);
     }
     function handleToggleResultAndReview() {
         setShowMobileSidebar(false);

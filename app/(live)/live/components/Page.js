@@ -13,7 +13,7 @@ import { quizActions } from '~/redux/slices/quizSlice';
 import Header from './Header';
 import Question from './Question';
 import Sidebar from './Sidebar';
-import MobileSidebar from './MoblieSidebar';
+import MobileSidebar from './MobileSidebar';
 import Modal from '~/app/components/Modal';
 
 // ANIM FOR RESULT
