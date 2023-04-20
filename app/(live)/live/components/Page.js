@@ -53,6 +53,12 @@ export default function Page({ quizRaw }) {
             showCompletedQuiz();
         }
     }, [isQuizComplete]);
+    function handleToggleResultAndReview() {
+        dispatch(quizActions.toggleResultAndReview());
+    }
+    function handleReset() {
+        dispatch(quizActions.reset());
+    }
 
     return quiz ? (
         <>
@@ -130,7 +136,7 @@ export default function Page({ quizRaw }) {
                     <AnimatePresence mode="wait">
                         <motion.main
                             exit={{ opacity: 0 }}
-                            className="flex min-h-screen flex-col items-center bg-gray-100 pt-14"
+                            className="flex min-h-screen flex-col items-center bg-gray-100 px-4 pt-14"
                         >
                             <motion.h2
                                 initial={{ opacity: 0 }}
@@ -143,13 +149,13 @@ export default function Page({ quizRaw }) {
                                 variants={animGroup}
                                 initial="hidden"
                                 animate="show"
-                                className="mt-16 grid grid-cols-4 gap-5"
+                                className="mt-16 grid grid-cols-4 gap-5 md:mt-10 md:w-full md:grid-cols-1"
                             >
                                 <motion.div
                                     variants={animItem}
-                                    className="relative flex h-[200px] w-[200px] flex-col items-center justify-center rounded-xl bg-white pt-5 text-green-500"
+                                    className="relative flex h-[200px] w-[200px] flex-col items-center justify-center rounded-xl bg-white pt-5 text-green-500 md:h-[130px] md:w-full md:flex-row md:justify-start md:px-16 md:pt-0 sm:px-10 xs:px-5"
                                 >
-                                    <div className="absolute top-0 -translate-y-1/2 ">
+                                    <div className="absolute top-0 -translate-y-1/2 md:relative md:translate-y-0">
                                         <CircularProgressbarWithChildren
                                             className="h-20"
                                             background
@@ -167,14 +173,16 @@ export default function Page({ quizRaw }) {
                                             </div>
                                         </CircularProgressbarWithChildren>
                                     </div>
-                                    <div className="font-semibold uppercase text-gray-600">Số câu đúng</div>
-                                    <div className="text-7xl font-bold">{quiz.correctQuestion}</div>
+                                    <div className="flex flex-col items-center md:flex-1">
+                                        <div className="font-semibold uppercase text-gray-600">Số câu đúng</div>
+                                        <div className="text-7xl font-bold">{quiz.correctQuestion}</div>
+                                    </div>
                                 </motion.div>
                                 <motion.div
                                     variants={animItem}
-                                    className="relative flex h-[200px] w-[200px] flex-col items-center justify-center rounded-xl bg-white pt-5 text-red-400 "
+                                    className="relative flex h-[200px] w-[200px] flex-col items-center justify-center rounded-xl bg-white pt-5 text-red-500 md:h-[130px] md:w-full md:flex-row md:justify-start md:px-16 md:pt-0 sm:px-10 xs:px-5"
                                 >
-                                    <div className="absolute top-0 -translate-y-1/2 ">
+                                    <div className="absolute top-0 -translate-y-1/2 md:relative md:translate-y-0">
                                         <CircularProgressbarWithChildren
                                             className="h-20"
                                             background
@@ -192,14 +200,16 @@ export default function Page({ quizRaw }) {
                                             </div>
                                         </CircularProgressbarWithChildren>
                                     </div>
-                                    <div className="font-semibold uppercase text-gray-600">Số câu sai</div>
-                                    <div className="text-7xl font-bold">{quiz.incorrectQuestion}</div>
+                                    <div className="flex flex-col items-center md:flex-1">
+                                        <div className="font-semibold uppercase text-gray-600">Số câu sai</div>
+                                        <div className="text-7xl font-bold">{quiz.incorrectQuestion}</div>
+                                    </div>
                                 </motion.div>
                                 <motion.div
                                     variants={animItem}
-                                    className="relative flex h-[200px] w-[200px] flex-col items-center justify-center rounded-xl bg-white pt-5 text-orange-400"
+                                    className="relative flex h-[200px] w-[200px] flex-col items-center justify-center rounded-xl bg-white pt-5 text-orange-400 md:h-[130px] md:w-full md:flex-row md:justify-start md:px-16 md:pt-0 sm:px-10 xs:px-5"
                                 >
-                                    <div className="absolute top-0 -translate-y-1/2 ">
+                                    <div className="absolute top-0 -translate-y-1/2 md:relative md:translate-y-0">
                                         <CircularProgressbarWithChildren
                                             className="h-20"
                                             background
@@ -217,14 +227,16 @@ export default function Page({ quizRaw }) {
                                             </div>
                                         </CircularProgressbarWithChildren>
                                     </div>
-                                    <div className="font-semibold uppercase text-gray-600">Số câu bỏ qua</div>
-                                    <div className="text-7xl font-bold">{quiz.skippedQuestion}</div>
+                                    <div className="flex flex-col items-center md:flex-1">
+                                        <div className="font-semibold uppercase text-gray-600">Số câu bỏ qua</div>
+                                        <div className="text-7xl font-bold">{quiz.skippedQuestion}</div>
+                                    </div>
                                 </motion.div>
                                 <motion.div
                                     variants={animItem}
-                                    className="relative flex h-[200px] w-[200px] flex-col items-center justify-center rounded-xl bg-white pt-5 text-primary"
+                                    className="relative flex h-[200px] w-[200px] flex-col items-center justify-center rounded-xl bg-white pt-5 text-primary md:h-[130px] md:w-full md:flex-row md:justify-start md:px-16 md:pt-0 sm:px-10 xs:px-5"
                                 >
-                                    <div className="absolute top-0 -translate-y-1/2 ">
+                                    <div className="absolute top-0 -translate-y-1/2 md:relative md:translate-y-0">
                                         <CircularProgressbarWithChildren
                                             className="h-20"
                                             background
@@ -239,9 +251,70 @@ export default function Page({ quizRaw }) {
                                             <div className="text-lg">{100 + '%'}</div>
                                         </CircularProgressbarWithChildren>
                                     </div>
-                                    <div className="font-semibold uppercase text-gray-600">Tổng số câu</div>
-                                    <div className="text-7xl font-bold">{quiz.numberOfQuestion}</div>
+                                    <div className="flex flex-col items-center md:flex-1">
+                                        <div className="font-semibold uppercase text-gray-600">Tổng số câu</div>
+                                        <div className="text-7xl font-bold">{quiz.numberOfQuestion}</div>
+                                    </div>
                                 </motion.div>
+                            </motion.div>
+
+                            {/* Moblie button */}
+                            <motion.div className="my-5 hidden w-full justify-center space-x-3 md:flex sm:block sm:space-x-0 sm:space-y-3">
+                                <motion.button
+                                    initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className={clsx(
+                                        'flex h-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary px-4 text-sm font-medium uppercase text-white hover:bg-primary-dark sm:w-full'
+                                    )}
+                                    onClick={handleToggleResultAndReview}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="h-6 w-6"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                                        />
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                                        />
+                                    </svg>
+
+                                    <p className="ml-1">Xem lại bài làm</p>
+                                </motion.button>
+                                <motion.button
+                                    initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className={clsx(
+                                        'flex h-10 flex-shrink-0 items-center justify-center rounded-lg border border-primary px-4 text-sm font-medium uppercase text-primary hover:bg-primary/5 sm:w-full'
+                                    )}
+                                    onClick={handleReset}
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={1.5}
+                                        stroke="currentColor"
+                                        className="h-6 w-6"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                                        />
+                                    </svg>
+
+                                    <p className="ml-1">Làm lại</p>
+                                </motion.button>
                             </motion.div>
                         </motion.main>
                     </AnimatePresence>
