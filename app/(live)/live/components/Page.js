@@ -49,6 +49,12 @@ export default function Page({ quizRaw }) {
     }, []);
 
     useEffect(() => {
+        if (quiz?.name) {
+            document.title = quiz.name + ' | BHTCNPM';
+        }
+    }, [quiz]);
+
+    useEffect(() => {
         if (isQuizComplete && quiz?.skippedQuestion === 0) {
             showCompletedQuiz();
         }
