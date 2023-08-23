@@ -17,6 +17,8 @@ import { ImageNode } from './nodes/ImageNode';
 import MathPlugin from './plugins/MathPlugin';
 import { MathNode } from './nodes/MathNode';
 import QuestionToolbarPlugin from './plugins/QuestionToolbarPlugin';
+import AudiosPlugin from './plugins/AudioPlugin';
+import { AudioNode } from './nodes/AudioNode';
 
 function Placeholder({ placeholder }) {
     return <div className="editor-placeholder">{placeholder}</div>;
@@ -30,7 +32,7 @@ const editorConfig = {
         throw error;
     },
     // Any custom nodes go here
-    nodes: [ListNode, ListItemNode, CodeNode, CodeHighlightNode, ImageNode, MathNode],
+    nodes: [ListNode, ListItemNode, CodeNode, CodeHighlightNode, ImageNode, AudioNode, MathNode],
 };
 
 export default function FullEditor({ content, onEditorChange, placeholder }) {
@@ -56,6 +58,7 @@ export default function FullEditor({ content, onEditorChange, placeholder }) {
                     <CodeHighlightPlugin />
                     <ListPlugin />
                     <ImagesPlugin />
+                    <AudiosPlugin />
                     <MathPlugin />
                 </div>
             </div>
