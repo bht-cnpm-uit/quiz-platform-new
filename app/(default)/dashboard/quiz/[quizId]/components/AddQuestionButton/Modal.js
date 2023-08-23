@@ -20,7 +20,10 @@ export default function Modal({ quizId, setIsOpen, questions }) {
         const questionsCollectionRef = collection(db, 'quizzes', quizId, 'questions');
         setLoading(true);
         const newIndex = (questions[questions.length - 1]?.index ?? 0) + 1024;
-        const newQuestionDocRef = await addDoc(questionsCollectionRef, { ...question, index: newIndex });
+        const newQuestionDocRef = await addDoc(questionsCollectionRef, {
+            ...question,
+            index: newIndex,
+        });
         setLoading(false);
         if (newQuestionDocRef) {
             createSuccessNotify();
@@ -111,15 +114,14 @@ export default function Modal({ quizId, setIsOpen, questions }) {
     }
 
     return (
-        <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 py-10"
-            onClick={() => setIsOpen(false)}
-        >
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 py-10">
             <div
-                className={clsx('my-4 max-h-full w-[700px] overflow-y-auto rounded-md border bg-white p-4', {
-                    'pointer-events-none opacity-50': loading,
-                })}
-                onClick={(e) => e.stopPropagation()}
+                className={clsx(
+                    'my-4 max-h-full w-[700px] overflow-y-auto rounded-md border bg-white p-4',
+                    {
+                        'pointer-events-none opacity-50': loading,
+                    }
+                )}
             >
                 <div className="flex space-x-3 pb-3">
                     <button
@@ -136,7 +138,10 @@ export default function Modal({ quizId, setIsOpen, questions }) {
                     </button>
                 </div>
                 <div className="">
-                    <FullEditor content={question.content} onEditorChange={handleContentQuestionChange} />
+                    <FullEditor
+                        content={question.content}
+                        onEditorChange={handleContentQuestionChange}
+                    />
 
                     {question.hint ? (
                         <details>
@@ -200,7 +205,9 @@ export default function Modal({ quizId, setIsOpen, questions }) {
                                 key={answer.id}
                                 content={answer.content}
                                 isCorrectAnswer={answer.id === question.correctAnswer}
-                                onEditorChange={(editorState) => handleAnswerChange(index, editorState)}
+                                onEditorChange={(editorState) =>
+                                    handleAnswerChange(index, editorState)
+                                }
                                 onDelete={() => handleAnswerDelete(index)}
                                 onCorrectAnswerChange={() => handleCorrectAnswerChange(answer.id)}
                             />
