@@ -15,14 +15,13 @@ const animGroup = {
         opacity: 1,
         transition: {
             delayChildren: 0.2,
-            staggerChildren: 0.07,
         },
     },
 };
 
 const animItem = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 },
+    hidden: { opacity: 0, scale: 0.9 },
+    show: { opacity: 1, scale: 1 },
 };
 
 export default function Sidebar() {
@@ -55,9 +54,12 @@ export default function Sidebar() {
                             className={clsx(
                                 'flex h-11 w-11 items-center justify-center rounded-lg border bg-gray-50 font-semibold text-gray-700 ring-offset-1 hover:ring-2 hover:ring-primary',
                                 {
-                                    'border-none !bg-red-400 !text-white': question.state === QUESTION_STATE.INCORRECT,
-                                    'border-none !bg-green-400 !text-white': question.state === QUESTION_STATE.CORRECT,
-                                    'border-none !bg-orange-300 !text-white': question.state === QUESTION_STATE.SKIPPED,
+                                    'border-none !bg-red-400 !text-white':
+                                        question.state === QUESTION_STATE.INCORRECT,
+                                    'border-none !bg-green-400 !text-white':
+                                        question.state === QUESTION_STATE.CORRECT,
+                                    'border-none !bg-orange-300 !text-white':
+                                        question.state === QUESTION_STATE.SKIPPED,
                                     'ring-2 ring-primary': index === quiz.currentQuestion,
                                 }
                             )}
@@ -85,10 +87,13 @@ export default function Sidebar() {
                                 trailColor: '#eee',
                             })}
                             strokeWidth={5}
-                            value={((quiz.correctQuestion * 100) / quiz.numberOfQuestion).toFixed(0)}
+                            value={((quiz.correctQuestion * 100) / quiz.numberOfQuestion).toFixed(
+                                0
+                            )}
                         >
                             <div className="text-lg">
-                                {((quiz.correctQuestion * 100) / quiz.numberOfQuestion).toFixed(0) + '%'}
+                                {((quiz.correctQuestion * 100) / quiz.numberOfQuestion).toFixed(0) +
+                                    '%'}
                             </div>
                         </CircularProgressbarWithChildren>
                         <p>{quiz.correctQuestion + '/' + quiz.numberOfQuestion}</p>
@@ -106,10 +111,14 @@ export default function Sidebar() {
                                 trailColor: '#eee',
                             })}
                             strokeWidth={5}
-                            value={((quiz.incorrectQuestion * 100) / quiz.numberOfQuestion).toFixed(0)}
+                            value={((quiz.incorrectQuestion * 100) / quiz.numberOfQuestion).toFixed(
+                                0
+                            )}
                         >
                             <div className="text-lg">
-                                {((quiz.incorrectQuestion * 100) / quiz.numberOfQuestion).toFixed(0) + '%'}
+                                {((quiz.incorrectQuestion * 100) / quiz.numberOfQuestion).toFixed(
+                                    0
+                                ) + '%'}
                             </div>
                         </CircularProgressbarWithChildren>
                         <p>{quiz.incorrectQuestion + '/' + quiz.numberOfQuestion}</p>
@@ -139,7 +148,12 @@ export default function Sidebar() {
                                 ).toFixed(0) + '%'}
                             </div>
                         </CircularProgressbarWithChildren>
-                        <p>{quiz.correctQuestion + quiz.incorrectQuestion + '/' + quiz.numberOfQuestion}</p>
+                        <p>
+                            {quiz.correctQuestion +
+                                quiz.incorrectQuestion +
+                                '/' +
+                                quiz.numberOfQuestion}
+                        </p>
                     </motion.div>
                 </div>
             ) : (

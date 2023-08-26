@@ -56,11 +56,12 @@ function AudioComponent({ src, nodeKey }) {
         editor.update(() => {
             const audioNode = $getNodeByKey(nodeKey);
             if ($isAudioNode(audioNode)) {
-                console.log(audioNode);
                 audioNode.setSrc(value);
             }
         });
     }
+
+    console.log({ src });
 
     const deleteAudio = useCallback(
         (payload) => {
@@ -116,16 +117,16 @@ function AudioComponent({ src, nodeKey }) {
             <div
                 className={clsx({
                     'ring ring-primary': isFocused,
+                    'ring !ring-red-500': error,
                 })}
             >
                 <audio
-                    src=""
+                    src={src}
                     controls
-                    autoPlay
                     onError={() => setError(true)}
-                    onLoad={() => setError(false)}
+                    onLoadedData={() => setError(false)}
                 />
-                {error && <div className="text-center text-red-500">Nguồn audio bị lỗi</div>}
+                <button className="flex w-full justify-center">Sửa audio</button>
             </div>
             {isFocused && <FloatingEditAudio src={src} onSubmit={changeSrc} />}
         </div>
