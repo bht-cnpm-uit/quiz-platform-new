@@ -15,7 +15,7 @@ const firebaseConfig = {
 
 // Dưới đây là 2 cái config firebase, chuyển qua chuyển lại nếu cái web nó ngủm
 
-/*
+
 const firebaseConfig = {
     apiKey: 'AIzaSyC-Rjy4zZWCSDoS491z-eNMATIIUzEFhbc',
     authDomain: 'quiz-2580c.firebaseapp.com',
@@ -24,8 +24,8 @@ const firebaseConfig = {
     messagingSenderId: '960047624019',
     appId: '1:960047624019:web:c6b9c6e645023eac5f7ba6',
 };
-*/
 
+/*
 const firebaseConfig = {
     apiKey: 'AIzaSyChLnWnglK0yyeUqd3Z1k4DLsVl0690FCo',
     authDomain: 'quiz-b4bb9.firebaseapp.com',
@@ -34,7 +34,7 @@ const firebaseConfig = {
     messagingSenderId: '738779623879',
     appId: '1:738779623879:web:58c502eeb9473382b229e2',
 };
-
+*/
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
